@@ -23,7 +23,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
 
@@ -31,7 +32,7 @@ public class User {
     private Role role;
 
     @Enumerated(EnumType.STRING)
-    private UserStatus status;
+    private UserStatus userStatus;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Reservation> reservations;
@@ -42,16 +43,18 @@ public class User {
     // Konstruktor bez argumenata
     public User() {}
 
-    // Konstruktor sa svim parametrima
-    public User(String name, String email, String password, Role role, UserStatus status, String dateCreated, String lastLogin) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.status = status;
-        this.dateCreated = dateCreated;
-        this.lastLogin = lastLogin;
-    }
+  // Konstruktor sa svim parametrima
+public User(String firstName, String lastName, String email, String password, Role role, UserStatus status, String dateCreated, String lastLogin) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.password = password;
+    this.role = role;
+    this.userStatus = status;
+    this.dateCreated = dateCreated;
+    this.lastLogin = lastLogin;
+}
+
 
     // Getters and setters
     public Long getId() {
@@ -62,13 +65,22 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
 
     public String getEmail() {
         return email;
@@ -94,12 +106,12 @@ public class User {
         this.role = role;
     }
 
-    public UserStatus getStatus() {
-        return status;
+    public UserStatus getUserStatus() {
+        return userStatus;
     }
 
-    public void setStatus(UserStatus status) {
-        this.status = status;
+    public void setUserStatus(UserStatus status) {
+        this.userStatus = status;
     }
 
     public List<Reservation> getReservations() {

@@ -6,6 +6,7 @@ import com.example.cinemaplus.user.model.User;
 import com.example.cinemaplus.user.service.UserService;
 
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,14 +15,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/")
+public ResponseEntity<List<User>> getAllUsers() {
+    return ResponseEntity.ok(userService.getAllUsers());
+}
 
     // Registracija korisnika
     @PostMapping("/register")
@@ -38,18 +42,18 @@ public class UserController {
         }
     }
 
+    // Prijava korisnika
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody UserDTO userDTO) {
         try {
-            User user = userService.loginUser(userDTO.getEmail(), userDTO.getPassword());
+            userService.loginUser(userDTO.getEmail(), userDTO.getPassword());
             return ResponseEntity.ok("Login successful");
         } catch (Exception e) {
             return new ResponseEntity<>("Error during login: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
-    
 
-    // Ažuriranje korisničkog profila
+    // Ažuriranje korisnika
     @PutMapping("/{id}")
     public ResponseEntity<String> updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO updatedUserDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -64,7 +68,7 @@ public class UserController {
         }
     }
 
-    // Brisanje korisničkog naloga
+    // Brisanje korisnika
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         try {
@@ -75,7 +79,7 @@ public class UserController {
         }
     }
 
-    // Pregled historije kupovina (rezervacija)
+    // Historija rezervacija korisnika
     @GetMapping("/{id}/history")
     public ResponseEntity<List<Reservation>> getUserHistory(@PathVariable Long id) {
         try {

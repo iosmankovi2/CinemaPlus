@@ -10,8 +10,11 @@ import jakarta.validation.Valid;
 
 public class UserDTO {
 
-    @NotBlank(message = "Name is mandatory")
-    private String name;
+    @NotBlank(message = "First name is mandatory")
+    private String firstName;
+
+    @NotBlank(message = "Last name is mandatory")
+    private String lastName;
 
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is mandatory")
@@ -23,16 +26,24 @@ public class UserDTO {
 
     private Role role;
 
-    private UserStatus status;
+    private UserStatus userStatus;
 
     // Getters and setters
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String name) {
+        this.firstName = name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String name) {
+        this.lastName = name;
     }
 
     public String getEmail() {
@@ -59,12 +70,12 @@ public class UserDTO {
         this.role = role;
     }
 
-    public UserStatus getStatus() {
-        return status;
+    public UserStatus getUserStatus() {
+        return userStatus;
     }
 
-    public void setStatus(UserStatus status) {
-        this.status = status;
+    public void setUserStatus(UserStatus status) {
+        this.userStatus = status;
     }
 }
 
