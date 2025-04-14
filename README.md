@@ -1,11 +1,11 @@
 
-# CinemaPlus - Informacioni Sistem za Kino
+# CinemaPlus - Informacioni sistem za kino
 
-Cineplexx je informacioni sistem za upravljanje rezervacijama, prodajom karata, projekcijama i ITIL procesima u okviru kinematografskih operacija. Ovaj sistem omogućava korisnicima da rezervišu i kupe karte, a administratorima da upravljaju filmovima, projekcijama i salama. Takođe, sistem implementira ključne ITIL procese, kao što su **Request Fulfillment**, **Release and Deployment Management**, **Access Management** i **Event Management**.
+CinemaPlus je informacioni sistem za upravljanje rezervacijama, prodajom karata, projekcijama i ITIL procesima u okviru kinematografskih operacija. Ovaj sistem omogućava korisnicima da rezervišu i kupe karte, a administratorima da upravljaju filmovima, projekcijama i salama. Takođe, sistem implementira ključne ITIL procese, kao što su **Request Fulfillment**, **Release and Deployment Management**, **Access Management** i **Event Management**.
 
 ## Tehnologije
 
-Ovaj projekat koristi sledeće tehnologije:
+Ovaj projekat koristi sljedeće tehnologije:
 
 - **Frontend**: 
   - **React.js**: Za dinamičko korisničko sučelje.
@@ -25,7 +25,7 @@ Ovaj projekat koristi sledeće tehnologije:
 
 ## Opis Sistema
 
-Cineplexx sistem je podeljen u nekoliko modula koji omogućavaju različite funkcionalnosti:
+CinemaPlus sistem je podijeljen u nekoliko modula koji omogućavaju različite funkcionalnosti:
 
 ### 1. **Korisnici**
 - **Gost**: Može pregledati filmove, rezervisati ili kupiti karte, ali nema administrativne privilegije.
@@ -44,8 +44,8 @@ Cineplexx sistem je podeljen u nekoliko modula koji omogućavaju različite funk
 
 ## Pokretanje Projekta
 
-### Preusmeravanje API-ja (Backend)
-Backend aplikacija koristi Spring Boot i može se pokrenuti sledećim komandama:
+### Preusmjeravanje API-ja (Backend)
+Backend aplikacija koristi Spring Boot i može se pokrenuti sljedećim komandama:
 
 1. **Preuzimanje projekta**:
     ```bash
@@ -54,16 +54,16 @@ Backend aplikacija koristi Spring Boot i može se pokrenuti sledećim komandama:
     ```
 
 2. **Kreiranje baze podataka**:
-    - Pre nego što pokrenete aplikaciju, potrebno je postaviti PostgreSQL bazu podataka.
+    - Prije nego što pokrenete aplikaciju, potrebno je postaviti PostgreSQL bazu podataka.
     - Kreirajte bazu podataka sa imenom `kino_system_db` i konfigurirajte fajl `application.properties` u `src/main/resources` sa vašim podacima za pristup bazi.
 
 3. **Pokretanje aplikacije**:
-    Ako koristite Maven, možete pokrenuti backend pomoću sledeće komande:
+    Ako koristite Maven, možete pokrenuti backend pomoću sljedeće komande:
     ```bash
     ./mvnw spring-boot:run
     ```
 ### Pokretanje Frontenda
-Frontend aplikacija je razvijena u React.js. Da biste je pokrenuli, pratite sledeće korake:
+Frontend aplikacija je razvijena u React.js. Da biste je pokrenuli, pratite sljedeće korake:
 
 1. **Preuzimanje projekta**:
     ```bash
@@ -78,7 +78,7 @@ Frontend aplikacija je razvijena u React.js. Da biste je pokrenuli, pratite sled
     ```
 
 3. **Pokretanje aplikacije**:
-    - Pokrenite frontend sa sledećom komandom:
+    - Pokrenite frontend sa sljedećom komandom:
     ```bash
     npm start
     ```
@@ -95,10 +95,10 @@ Za testiranje REST API-ja možete koristiti **Postman**:
 
 ## ITIL Procesi
 
-Ovaj sistem implementira sledeće ITIL procese:
+Ovaj sistem implementira sljedeće ITIL procese:
 
 1. **Request Fulfillment**:
-   - Omogućava korisnicima da šalju zahteve za dodatnim informacijama ili podrškom.
+   - Omogućava korisnicima da šalju zahtjeve za dodatnim informacijama ili podrškom.
 
 2. **Release and Deployment Management**:
    - Upravljanje verzijama sistema, implementacija novih funkcionalnosti i ažuriranja.
