@@ -1,6 +1,5 @@
-# CinemaPlus
 
-# Cineplexx - Informacioni Sistem za Kino
+# CinemaPlus - Informacioni Sistem za Kino
 
 Cineplexx je informacioni sistem za upravljanje rezervacijama, prodajom karata, projekcijama i ITIL procesima u okviru kinematografskih operacija. Ovaj sistem omogućava korisnicima da rezervišu i kupe karte, a administratorima da upravljaju filmovima, projekcijama i salama. Takođe, sistem implementira ključne ITIL procese, kao što su **Request Fulfillment**, **Release and Deployment Management**, **Access Management** i **Event Management**.
 
