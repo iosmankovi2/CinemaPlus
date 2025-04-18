@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/CinemaPlus.iml" filepath="$PROJECT_DIR$/.idea/CinemaPlus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/cinema-plus.iml" filepath="$PROJECT_DIR$/backend/cinema-plus.iml" />
     </modules>
   </component>
 </project>
