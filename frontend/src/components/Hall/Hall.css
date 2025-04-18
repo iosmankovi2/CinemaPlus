@@ -1,0 +1,36 @@
+.halls-wrapper {
+  background-image: url('../../assets/popcorn-cinema.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  padding: 40px;
+  padding-top: 100px;
+  color: white;
+  text-align: center;
+}
+
+.hall-title {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.halls-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.hall-card {
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  padding: 15px;
+  width: 250px;
+  color: white;
+}
+
+.hall-image {
+  width: 100%;
+  border-radius: 8px;
+}

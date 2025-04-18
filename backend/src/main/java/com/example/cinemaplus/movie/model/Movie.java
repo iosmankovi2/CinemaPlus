@@ -20,7 +20,7 @@ public class Movie {
 
     private String director;
 
-    private String cast;
+    private String movieCast;
 
     private int releaseYear;
 
@@ -77,11 +77,11 @@ public class Movie {
     }
 
     public String getCast() {
-        return cast;
+        return movieCast;
     }
 
     public void setCast(String cast) {
-        this.cast = cast;
+        this.movieCast = cast;
     }
 
     public int getReleaseYear() {
