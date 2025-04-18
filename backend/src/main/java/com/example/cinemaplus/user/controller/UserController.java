@@ -68,6 +68,17 @@ public ResponseEntity<List<User>> getAllUsers() {
         }
     }
 
+    @PatchMapping("/{id}/role")
+public ResponseEntity<String> updateUserRole(@PathVariable Long id, @RequestParam String role) {
+    try {
+        userService.updateUserRole(id, role);
+        return ResponseEntity.ok("User role updated successfully");
+    } catch (Exception e) {
+        return new ResponseEntity<>("Error updating role: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+}
+
+
     // Brisanje korisnika
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {

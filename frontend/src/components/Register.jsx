@@ -1,21 +1,35 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../api';
 import './Register.css';
 
+
 export default function Register() {
-  const [user, setUser] = useState({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' });
+  const navigate = useNavigate(); 
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
 
   const handleChange = e => setUser({ ...user, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
     e.preventDefault();
+
     if (user.password !== user.confirmPassword) {
       alert("Passwords do not match");
       return;
     }
+
     try {
-      await registerUser(user);
-      alert('Registration successful');
+      const response = await registerUser(user); // sada hvataš response
+      if (response.status === 201) {
+        alert('Registration successful');
+        navigate('/login'); // redirekcija nakon uspješne registracije
+      }
     } catch (err) {
       alert(err.response?.data || 'Error registering user');
     }

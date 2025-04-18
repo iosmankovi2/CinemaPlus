@@ -7,12 +7,14 @@ import com.example.cinemaplus.user.repository.UserRepository;
 import com.example.cinemaplus.user.model.Role; // Prilagodi putanju prema tvojoj strukturi paketa
 import com.example.cinemaplus.user.model.UserStatus;
 import jakarta.transaction.Transactional;
+import com.example.cinemaplus.exception.UserNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,21 +58,44 @@ public List<User> getAllUsers() {
 }
 
 
-    public User loginUser(String email, String password) {
-        if (email == null || email.isBlank() || password == null || password.isBlank()) {
-            throw new IllegalArgumentException("Email and password are required.");
-        }
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Invalid email or password."));
-
-        if (!user.getPassword().equals(password)) {
-            throw new RuntimeException("Invalid email or password.");
-        }
-
-        return user;
+public User loginUser(String email, String password) {
+    if (email == null || email.isBlank() || password == null || password.isBlank()) {
+        throw new IllegalArgumentException("Email and password are required.");
     }
 
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> {
+                System.out.println("User not found with email: " + email);  // Logiranje
+                return new RuntimeException("Invalid email or password.");
+            });
+
+    System.out.println("User found: " + user.getEmail());  // Logiranje
+
+    if (!passwordEncoder.matches(password, user.getPassword())) {
+        System.out.println("Password mismatch: entered=" + password + ", stored=" + user.getPassword());  // Logiranje
+        throw new RuntimeException("Invalid email or password.");
+    }
+
+    System.out.println("Login successful");  // Logiranje
+    return user;
+}
+
+public void updateUserRole(Long id, String role) {
+    User user = userRepository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+    try {
+        Role enumRole = Arrays.stream(Role.values())
+                              .filter(r -> r.name().equalsIgnoreCase(role))
+                              .findFirst()
+                              .orElseThrow(() -> new IllegalArgumentException("Invalid role: " + role));
+
+        user.setRole(enumRole);
+        userRepository.save(user);
+    } catch (Exception e) {
+        throw new IllegalArgumentException("Error updating role: " + e.getMessage());
+    }
+}
     @Transactional
     public void updateUser(Long id, UserDTO userDTO) {
         validateUserDTO(userDTO);

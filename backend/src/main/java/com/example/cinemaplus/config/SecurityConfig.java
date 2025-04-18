@@ -7,23 +7,27 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable() // isključeno radi Postman/React testiranja
+            .csrf().disable()
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.PATCH, "/api/users/**").permitAll()
                 .requestMatchers("/api/users/register", "/api/users/login").permitAll()
                 .anyRequest().authenticated()
             )
-            .httpBasic(); // ili formLogin() ako hoćeš HTML formu
-
+            .httpBasic();
+    
         return http.build();
     }
+    
 @Bean
 public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
