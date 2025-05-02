@@ -1,6 +1,10 @@
 package com.example.cinemaplus.movie.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Movie {
@@ -25,6 +29,11 @@ public class Movie {
     private int releaseYear;
 
     private boolean currentlyShowing;
+    
+    private String trailerUrl;
+    
+    private String imageUrl;
+
 
     // Getteri i setteri
 
@@ -98,6 +107,22 @@ public class Movie {
 
     public void setCurrentlyShowing(boolean currentlyShowing) {
         this.currentlyShowing = currentlyShowing;
+    }
+
+    public String getTrailerUrl() {
+        return trailerUrl;
+    }
+
+    public void setTrailerUrl(String trailerUrl) {
+        this.trailerUrl = trailerUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
 
