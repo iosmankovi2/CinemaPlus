@@ -1,10 +1,18 @@
 package com.example.cinemaplus.projection.model;
 
+import java.time.LocalDateTime;
+
 import com.example.cinemaplus.hall.model.model.Hall;
 import com.example.cinemaplus.movie.model.Movie;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Projection {
@@ -14,6 +22,7 @@ public class Projection {
     private Long id;
 
     @ManyToOne(optional = false)
+    @JsonIgnore
     private Movie movie;
 
     @ManyToOne(optional = false)

@@ -14,6 +14,7 @@ const Home = () => {
         </Link>
         <nav className="nav-links">
           <Link to="/sale" className="nav-link">Sale</Link> {/* Dodan link za Sale */}
+          <Link to="/movies" className="nav-link">Movies</Link>
           <Link to="/login" className="nav-link">Login</Link>
           <Link to="/register" className="nav-link">Register</Link>
         </nav>

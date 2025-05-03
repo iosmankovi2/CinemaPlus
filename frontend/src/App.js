@@ -6,6 +6,9 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Sale from './components/Hall/Hall';
 import HallDetails from './components/Hall/HallDetails';
+import MovieSection from './components/MovieSection/MovieSection';
+import MovieDetails from './components/MovieDetails/MovieDetails';
+
 
 function App() {
   return (
@@ -18,6 +21,9 @@ function App() {
           <Route path="sale/:hallId" element={<HallDetails />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
+          <Route path="movies" element={<MovieSection />} />
+          <Route path="movies/:id" element={<MovieDetails />} />
+          <Route path="projections" element={<MovieDetails />} />
         </Route>
       </Routes>
     </Router>
