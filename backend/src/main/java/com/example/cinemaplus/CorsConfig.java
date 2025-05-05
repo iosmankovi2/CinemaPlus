@@ -17,6 +17,7 @@ public class CorsConfig {
                         .allowedOrigins("http://localhost:3000") // React frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
+                        .exposedHeaders("Authorization")
                         .allowCredentials(true); // ako koristiš sesije ili cookies
             }
         };

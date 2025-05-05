@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../api';
 import './Register.css';
 
-
 export default function Register() {
-  const navigate = useNavigate(); 
   const [user, setUser] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
 
-  const handleChange = e => setUser({ ...user, [e.target.name]: e.target.value });
+  const navigate = useNavigate();
 
-  const handleSubmit = async e => {
+  const handleChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (user.password !== user.confirmPassword) {
@@ -25,13 +26,26 @@ export default function Register() {
     }
 
     try {
-      const response = await registerUser(user); // sada hvataš response
-      if (response.status === 201) {
-        alert('Registration successful');
-        navigate('/login'); // redirekcija nakon uspješne registracije
+      const response = await fetch('http://localhost:8089/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          password: user.password,
+        }),
+      });
+
+      if (response.ok) {
+        alert("Registration successful!");
+        navigate('/login');
+      } else {
+        const errorText = await response.text();
+        alert("Registration failed: " + errorText);
       }
-    } catch (err) {
-      alert(err.response?.data || 'Error registering user');
+    } catch (error) {
+      alert("An error occurred: " + error.message);
     }
   };
 
@@ -39,12 +53,12 @@ export default function Register() {
     <div className="register-container">
       <div className="register-box">
         <div className="register-header">
-        🎞️ <span className="cinema-red">Cinem</span><span className="plus-white">Plus</span>
-          <p className="welcome">Welcome back</p>
-          <p className="subtext">Enter your credentials to access your account</p>
+          🎞️ <span className="cinema-red">Cinem</span><span className="plus-white">Plus</span>
+          <p className="welcome">Create your account</p>
+          <p className="subtext">Enter your information to get started</p>
         </div>
         <div className="register-toggle">
-          <button className="login-btn">Login</button>
+          <button className="login-btn" onClick={() => navigate('/login')}>Login</button>
           <button className="register-btn">Register</button>
         </div>
         <form onSubmit={handleSubmit} className="form">

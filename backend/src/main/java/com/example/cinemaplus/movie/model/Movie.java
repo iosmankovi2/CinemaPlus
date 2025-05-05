@@ -20,7 +20,7 @@ public class Movie {
 
     private String director;
 
-    private String cast;
+    private String movie_cast;
 
     private int releaseYear;
 
@@ -76,12 +76,12 @@ public class Movie {
         this.director = director;
     }
 
-    public String getCast() {
-        return cast;
+    public String getMovieCast() {
+        return movie_cast;
     }
 
-    public void setCast(String cast) {
-        this.cast = cast;
+    public void setMovieCast(String movie_cast) {
+        this.movie_cast = movie_cast;
     }
 
     public int getReleaseYear() {
