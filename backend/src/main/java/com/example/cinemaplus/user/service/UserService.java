@@ -7,14 +7,13 @@ import com.example.cinemaplus.user.repository.UserRepository;
 import com.example.cinemaplus.user.model.Role; // Prilagodi putanju prema tvojoj strukturi paketa
 import com.example.cinemaplus.user.model.UserStatus;
 import jakarta.transaction.Transactional;
-import com.example.cinemaplus.exception.UserNotFoundException;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
-import java.util.Arrays;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +28,7 @@ public class UserService {
 
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepository;    
 
     @Transactional
 public void registerUser(UserDTO userDTO) {
@@ -58,44 +57,38 @@ public List<User> getAllUsers() {
 }
 
 
+
 public User loginUser(String email, String password) {
     if (email == null || email.isBlank() || password == null || password.isBlank()) {
         throw new IllegalArgumentException("Email and password are required.");
     }
 
     User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> {
-                System.out.println("User not found with email: " + email);  // Logiranje
-                return new RuntimeException("Invalid email or password.");
-            });
-
-    System.out.println("User found: " + user.getEmail());  // Logiranje
+            .orElseThrow(() -> new RuntimeException("Invalid email or password."));
 
     if (!passwordEncoder.matches(password, user.getPassword())) {
-        System.out.println("Password mismatch: entered=" + password + ", stored=" + user.getPassword());  // Logiranje
         throw new RuntimeException("Invalid email or password.");
     }
 
-    System.out.println("Login successful");  // Logiranje
-    return user;
+    return user; // Return user object if login is successful
 }
 
-public void updateUserRole(Long id, String role) {
-    User user = userRepository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-    try {
-        Role enumRole = Arrays.stream(Role.values())
-                              .filter(r -> r.name().equalsIgnoreCase(role))
-                              .findFirst()
-                              .orElseThrow(() -> new IllegalArgumentException("Invalid role: " + role));
-
-        user.setRole(enumRole);
-        userRepository.save(user);
-    } catch (Exception e) {
-        throw new IllegalArgumentException("Error updating role: " + e.getMessage());
+public User authenticateUser(String email, String password) {
+    Optional<User> userOptional = userRepository.findByEmail(email);
+    if (userOptional.isPresent()) {
+        User user = userOptional.get();
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            user.setLastLogin(LocalDate.now().toString()); // Ažuriraj lastLogin
+            userRepository.save(user); // Sačuvaj promjenu
+            return user;
+        }
     }
+    return null;
 }
+
+
+
     @Transactional
     public void updateUser(Long id, UserDTO userDTO) {
         validateUserDTO(userDTO);
@@ -125,6 +118,11 @@ public void updateUserRole(Long id, String role) {
                 .orElseThrow(() -> new RuntimeException("User not found."));
         return user.getReservations();
     }
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+    
 
     // --- Helper method for validation ---
     private void validateUserDTO(UserDTO userDTO) {
@@ -142,7 +140,7 @@ public void updateUserRole(Long id, String role) {
             throw new IllegalArgumentException("Password is required.");
         }
         if (userDTO.getRole() == null) {
-            userDTO.setRole(Role.User);  
+            userDTO.setRole(Role.User); 
         }
          
         if (userDTO.getUserStatus() == null) {
