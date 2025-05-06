@@ -17,8 +17,6 @@ function App() {
     <Router>
 
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
           <Route path="/" element={<Home />} />  {/* Home component */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
@@ -28,7 +26,7 @@ function App() {
           <Route path="movies" element={<MovieSection />} />
           <Route path="movies/:id" element={<MovieDetails />} />
           <Route path="projections" element={<MovieDetails />} />
-        </Route>
+       
       </Routes>
 
     </Router>

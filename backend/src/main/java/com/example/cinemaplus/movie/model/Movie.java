@@ -24,11 +24,7 @@ public class Movie {
 
     private String director;
 
-<<<<<<< HEAD
-    private String movie_cast;
-=======
     private String movieCast;
->>>>>>> 0a18f5ed2332883b8fb5c0dc204efd6cd50d7a8c
 
     private int releaseYear;
 
@@ -89,21 +85,12 @@ public class Movie {
         this.director = director;
     }
 
-<<<<<<< HEAD
-    public String getMovieCast() {
-        return movie_cast;
-    }
-
-    public void setMovieCast(String movie_cast) {
-        this.movie_cast = movie_cast;
-=======
     public String getCast() {
         return movieCast;
     }
 
     public void setCast(String cast) {
         this.movieCast = cast;
->>>>>>> 0a18f5ed2332883b8fb5c0dc204efd6cd50d7a8c
     }
 
     public int getReleaseYear() {
@@ -121,9 +108,6 @@ public class Movie {
     public void setCurrentlyShowing(boolean currentlyShowing) {
         this.currentlyShowing = currentlyShowing;
     }
-<<<<<<< HEAD
-}
-=======
 
     public String getTrailerUrl() {
         return trailerUrl;
@@ -141,5 +125,3 @@ public class Movie {
         this.imageUrl = imageUrl;
     }
 }
-
->>>>>>> 0a18f5ed2332883b8fb5c0dc204efd6cd50d7a8c
