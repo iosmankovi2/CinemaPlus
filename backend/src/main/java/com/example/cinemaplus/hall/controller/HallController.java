@@ -1,7 +1,7 @@
-package com.example.cinemaplus.hall.model.controller;
+package com.example.cinemaplus.hall.controller;
 
-import com.example.cinemaplus.hall.model.dto.HallDTO;
-import com.example.cinemaplus.hall.model.service.HallService;
+import com.example.cinemaplus.hall.dto.HallDTO;
+import com.example.cinemaplus.hall.service.HallService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
