@@ -14,7 +14,8 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // sve rute
-                        .allowedOrigins("http://localhost:3000") // React frontend
+                        .allowedOrigins("http://localhost:3000", "http://localhost:3001")
+// React frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true); // ako koristiš sesije ili cookies
