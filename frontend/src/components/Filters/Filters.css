@@ -1,0 +1,30 @@
+.filters-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 5%;
+  margin-left: 2%;
+}
+
+.filter-input,
+.filter-select {
+  background-color: #1f1f1f;
+  color: #f1f1f1;
+  border: 1px solid #333;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s ease, background 0.2s ease;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  border-color: #ef4444;
+  background-color: #262626;
+}
+
+.filter-input::placeholder {
+  color: #777;
+}

@@ -1,0 +1,127 @@
+  
+  .role-admin {
+    background-color: #a855f7;
+  }
+  
+  .role-staff {
+    background-color: #3b82f6;
+  }
+  
+  .role-customer {
+    background-color: #6b7280;
+  }
+  
+  .status-active {
+    background-color: #22c55e;
+    color: black;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    display: inline-block;
+  }
+  
+  .status-suspended {
+    background-color: #f87171;
+    color: black;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    display: inline-block;
+  }
+  .user-row {
+    border-bottom: 1px solid #2c2c2c;
+  }
+  
+  .user-name {
+    font-weight: bold;
+    color: #f5f5f5;
+  }
+  
+  .user-email {
+    color: #9ca3af;
+    font-size: 0.875rem;
+  }
+  
+  .role-tag {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 12px;
+    color: white;
+    display: inline-block;
+    text-transform: capitalize;
+  }
+  
+  .role-administrator {
+    background-color: #a855f7;
+  }
+  
+  .role-staff {
+    background-color: #3b82f6;
+  }
+  
+  .role-customer {
+    background-color: #6b7280;
+  }
+  
+  .status-tag {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    display: inline-block;
+    text-transform: capitalize;
+  }
+  
+  .status-active {
+    background-color: #22c55e;
+    color: #000;
+  }
+  
+  .status-suspended {
+    background-color: #f87171;
+    color: #000;
+  }
+  
+  .ellipsis {
+    color: #9ca3af;
+  }
+  
+  .edit-btn,
+.delete-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+  min-width: 60px;
+  text-align: center;
+}
+
+.edit-btn {
+  background-color: #3b82f6;
+  color: white;
+  margin-right: 8px; /* ključna linija: razmak između Edit i Delete */
+}
+
+.edit-btn:hover {
+  background-color: #60a5fa;
+  transform: scale(1.05);
+}
+
+.delete-btn {
+  background-color: #ef4444;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #f87171;
+  transform: scale(1.05);
+}
+
+  
+  
