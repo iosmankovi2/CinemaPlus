@@ -1,7 +1,7 @@
 package com.example.cinemaplus.reservation.model;
 
 import com.example.cinemaplus.projection.model.Projection;
-import com.example.cinemaplus.seat.model.Seat;
+import com.example.cinemaplus.seat.model.model.Seat;
 import com.example.cinemaplus.user.model.User;
 
 import jakarta.persistence.Column;

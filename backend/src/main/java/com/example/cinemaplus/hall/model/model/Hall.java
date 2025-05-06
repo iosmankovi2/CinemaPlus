@@ -1,6 +1,7 @@
-package com.example.cinemaplus.hall.model;
+package com.example.cinemaplus.hall.model.model;
 
 import com.example.cinemaplus.projection.model.Projection;
+import com.example.cinemaplus.seat.model.model.Seat;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -13,15 +14,26 @@ public class Hall {
     private Long id;
 
     private String name;
-
     private int numberOfRows;
-
     private int seatsPerRow;
 
     @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL)
     private List<Projection> projections;
 
-    // Getteri i setteri
+    @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL)
+    private List<Seat> seats;
+
+    // === KONSTRUKTORI ===
+
+    public Hall() {}
+
+    public Hall(String name, int numberOfRows, int seatsPerRow) {
+        this.name = name;
+        this.numberOfRows = numberOfRows;
+        this.seatsPerRow = seatsPerRow;
+    }
+
+    // === GETTERI I SETTERI ===
 
     public Long getId() {
         return id;
@@ -61,5 +73,13 @@ public class Hall {
 
     public void setProjections(List<Projection> projections) {
         this.projections = projections;
+    }
+
+    public List<Seat> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(List<Seat> seats) {
+        this.seats = seats;
     }
 }
