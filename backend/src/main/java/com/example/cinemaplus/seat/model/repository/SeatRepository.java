@@ -1,6 +1,6 @@
 package com.example.cinemaplus.seat.model.repository;
 
-import com.example.cinemaplus.hall.model.Hall;
+import com.example.cinemaplus.hall.model.model.Hall;
 import com.example.cinemaplus.seat.model.model.Seat;
 import org.springframework.data.jpa.repository.JpaRepository;
 

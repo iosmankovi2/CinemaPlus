@@ -1,7 +1,8 @@
-package com.example.cinemaplus.hall.service;
+package com.example.cinemaplus.hall.model.service;
 
-import com.example.cinemaplus.hall.dto.HallDTO;
-import com.example.cinemaplus.hall.repository.HallRepository;
+import com.example.cinemaplus.hall.model.dto.HallDTO;
+import com.example.cinemaplus.hall.model.model.Hall;
+import com.example.cinemaplus.hall.model.repository.HallRepository;
 import com.example.cinemaplus.seat.model.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

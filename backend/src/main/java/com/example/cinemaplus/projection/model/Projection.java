@@ -1,6 +1,6 @@
 package com.example.cinemaplus.projection.model;
 
-import com.example.cinemaplus.hall.model.Hall;
+import com.example.cinemaplus.hall.model.model.Hall;
 import com.example.cinemaplus.movie.model.Movie;
 import jakarta.persistence.*;
 

@@ -1,7 +1,7 @@
 package com.example.cinemaplus;
 
-import com.example.cinemaplus.hall.model.Hall;
-import com.example.cinemaplus.hall.repository.HallRepository;
+import com.example.cinemaplus.hall.model.model.Hall;
+import com.example.cinemaplus.hall.model.repository.HallRepository;
 import com.example.cinemaplus.seat.model.model.Seat;
 import com.example.cinemaplus.seat.model.repository.SeatRepository;
 import org.springframework.boot.CommandLineRunner;
