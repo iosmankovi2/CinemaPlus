@@ -1,34 +1,56 @@
 import React, { useState } from 'react';
-import { loginUser } from '../api';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 export default function Login() {
   const [user, setUser] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
 
-  const handleChange = e =>
+  const handleChange = (e) =>
     setUser({ ...user, [e.target.name]: e.target.value });
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await loginUser(user);
-      alert('Login successful');
+        const response = await fetch('http://localhost:8089/api/users/login', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user),
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            alert("Login failed: " + text); // Prikazivanje greške korisniku
+            return;
+        }
+
+        const token = await response.text();
+        localStorage.setItem("token", token);  // Spremanje JWT tokena u localStorage
+        console.log("TOKEN:", token);
+
+        // Oznaka da je korisnik ulogovan
+        localStorage.setItem("isAuthenticated", "true");
+
+        // Redirektuj korisnika na /user stranicu
+        navigate('/user');
     } catch (err) {
-      alert(err.response?.data || 'Invalid credentials');
+        alert("Greška: Backend ne radi ili je pogrešan URL.");
+        console.error(err);
     }
-  };
+};
+
 
   return (
     <div className="login-container">
       <div className="login-box">
         <div className="login-header">
-        🎞️ <span className="cinema-red">Cinem</span><span className="plus-white">Plus</span>
+          🎞️ <span className="cinema-red">Cinem</span>
+          <span className="plus-white">Plus</span>
           <p className="welcome">Welcome back</p>
           <p className="subtext">Enter your credentials to access your account</p>
-        </div>
-        <div className="login-toggle">
-          <button className="login-btn">Login</button>
-          <button className="register-btn">Register</button>
         </div>
         <form onSubmit={handleSubmit} className="form">
           <label className="input-label">Email</label>
@@ -48,7 +70,6 @@ export default function Login() {
           <input
             name="password"
             type="password"
-            placeholder=""
             value={user.password}
             onChange={handleChange}
             className="input-full"
@@ -58,14 +79,6 @@ export default function Login() {
             Sign in
           </button>
         </form>
-        <div className="or-text">OR CONTINUE WITH</div>
-        <div className="social-buttons">
-          <button className="social-btn">Google</button>
-          <button className="social-btn">Facebook</button>
-        </div>
-        <p className="terms-text">
-          By continuing, you agree to our <span className="highlight">Terms of Service</span> and <span className="highlight">Privacy Policy</span>.
-        </p>
       </div>
     </div>
   );

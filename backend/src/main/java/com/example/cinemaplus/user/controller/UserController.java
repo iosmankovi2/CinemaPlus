@@ -4,16 +4,20 @@ import com.example.cinemaplus.reservation.model.Reservation;
 import com.example.cinemaplus.user.dto.UserDTO;
 import com.example.cinemaplus.user.model.User;
 import com.example.cinemaplus.user.service.UserService;
+import java.util.Date;
+import com.example.cinemaplus.security.CustomUserDetails;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import com.example.cinemaplus.security.JwtTokenUtil;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
-
+import com.example.cinemaplus.user.dto.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 @RestController
 @RequestMapping("/api/users")
@@ -21,6 +25,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+  
 
     @GetMapping("/")
 public ResponseEntity<List<User>> getAllUsers() {
@@ -35,23 +40,33 @@ public ResponseEntity<List<User>> getAllUsers() {
         }
 
         try {
-            userService.registerUser(userDTO);
+            userService.registerUser(userDTO); 
             return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Error during registration: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Prijava korisnika
-    @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserDTO userDTO) {
-        try {
-            userService.loginUser(userDTO.getEmail(), userDTO.getPassword());
-            return ResponseEntity.ok("Login successful");
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error during login: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
-    }
+ @PostMapping("/login")
+ public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+     System.out.println("Pokušaj logina: " + loginRequest.getEmail());
+ 
+     // Provjera korisnika
+     User user = userService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
+     if (user != null) {
+         System.out.println("User pronađen: " + user.getEmail());
+         String token = JwtTokenUtil.generateJwtToken(user);
+         return ResponseEntity.ok(token); // Vraćanje tokena
+     } else {
+         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neispravni podaci za prijavu");
+     }
+ }
+    
+    
+    @GetMapping("/me")
+public ResponseEntity<User> getLoggedInUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    return ResponseEntity.ok(userDetails.getUser());
+}
 
     // Ažuriranje korisnika
     @PutMapping("/{id}")
@@ -67,6 +82,13 @@ public ResponseEntity<List<User>> getAllUsers() {
             return new ResponseEntity<>("Error during update: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PreAuthorize("hasRole('ROLE_Admin')")
+@GetMapping("/admin/data")
+public ResponseEntity<String> adminData() {
+    return ResponseEntity.ok("Samo ADMIN vidi ovo.");
+}
+
 
     // Brisanje korisnika
     @DeleteMapping("/{id}")

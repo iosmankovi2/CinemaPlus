@@ -7,6 +7,7 @@ import com.example.cinemaplus.user.repository.UserRepository;
 import com.example.cinemaplus.user.model.Role; // Prilagodi putanju prema tvojoj strukturi paketa
 import com.example.cinemaplus.user.model.UserStatus;
 import jakarta.transaction.Transactional;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class UserService {
 
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepository;    
 
     @Transactional
 public void registerUser(UserDTO userDTO) {
@@ -56,20 +57,46 @@ public List<User> getAllUsers() {
 }
 
 
-    public User loginUser(String email, String password) {
-        if (email == null || email.isBlank() || password == null || password.isBlank()) {
-            throw new IllegalArgumentException("Email and password are required.");
-        }
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Invalid email or password."));
-
-        if (!user.getPassword().equals(password)) {
-            throw new RuntimeException("Invalid email or password.");
-        }
-
-        return user;
+public User loginUser(String email, String password) {
+    if (email == null || email.isBlank() || password == null || password.isBlank()) {
+        throw new IllegalArgumentException("Email and password are required.");
     }
+
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Invalid email or password."));
+
+    if (!passwordEncoder.matches(password, user.getPassword())) {
+        throw new RuntimeException("Invalid email or password.");
+    }
+
+    return user; // Return user object if login is successful
+}
+
+
+public User authenticateUser(String email, String password) {
+    System.out.println("Pokušaj autentifikacije: " + email);
+    Optional<User> optionalUser = userRepository.findByEmail(email);
+    if (optionalUser.isEmpty()) {
+        System.out.println("Email ne postoji u bazi.");
+        return null;
+    }
+
+    User user = optionalUser.get();
+
+    System.out.println("Upoređujem lozinke...");
+    if (passwordEncoder.matches(password, user.getPassword())) {
+        System.out.println("Lozinka odgovara.");
+        return user;
+    } else {
+        System.out.println("Lozinka NIJE tačna.");
+        return null;
+    }
+}
+
+
+
+
 
     @Transactional
     public void updateUser(Long id, UserDTO userDTO) {
@@ -100,6 +127,11 @@ public List<User> getAllUsers() {
                 .orElseThrow(() -> new RuntimeException("User not found."));
         return user.getReservations();
     }
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+    
 
     // --- Helper method for validation ---
     private void validateUserDTO(UserDTO userDTO) {
@@ -117,7 +149,7 @@ public List<User> getAllUsers() {
             throw new IllegalArgumentException("Password is required.");
         }
         if (userDTO.getRole() == null) {
-            userDTO.setRole(Role.User);  
+            userDTO.setRole(Role.User); 
         }
          
         if (userDTO.getUserStatus() == null) {
