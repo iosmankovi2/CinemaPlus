@@ -46,21 +46,22 @@ public ResponseEntity<List<User>> getAllUsers() {
             return new ResponseEntity<>("Error during registration: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+ @PostMapping("/login")
+ public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+     System.out.println("Pokušaj logina: " + loginRequest.getEmail());
  
-   
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        System.out.println("Pokušaj logina: " + loginRequest.getEmail());
+     // Provjera korisnika
+     User user = userService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
+     if (user != null) {
+         System.out.println("User pronađen: " + user.getEmail());
+         String token = JwtTokenUtil.generateJwtToken(user);
+         return ResponseEntity.ok(token); // Vraćanje tokena
+     } else {
+         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neispravni podaci za prijavu");
+     }
+ }
     
-        User user = userService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
-    
-        if (user != null) {
-            String token = JwtTokenUtil.generateJwtToken(user);
-            return ResponseEntity.ok(token);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neispravni podaci za prijavu");
-        }
-    }
     
     @GetMapping("/me")
 public ResponseEntity<User> getLoggedInUser(@AuthenticationPrincipal CustomUserDetails userDetails) {

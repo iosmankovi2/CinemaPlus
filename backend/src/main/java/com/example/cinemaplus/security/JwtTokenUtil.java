@@ -1,24 +1,27 @@
 package com.example.cinemaplus.security;
 
 import io.jsonwebtoken.JwtException; // Dodajte ovaj import
+import javax.crypto.SecretKey;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import com.example.cinemaplus.user.model.User;
-
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 
 public class JwtTokenUtil {
 
-    private static final String SECRET_KEY = "tajniKljuc"; // Ovdje staviti tajni ključ (nemoj koristiti ovaj u produkciji!)
 
-    // Metoda za generisanje JWT tokena
+
+private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
     public static String generateJwtToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getEmail()) // Korisničko ime je subject
                 .setIssuedAt(new Date()) // Datum kada je token izdat
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // Token važi 10 sati
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY) // Potpisivanje tokena
+                .signWith(SECRET_KEY) // Potpisivanje tokena
                 .compact(); // Kompaktan oblik tokena
     }
 

@@ -11,31 +11,37 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
-      const response = await fetch('http://localhost:8089/api/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json'
-         },
-        body: JSON.stringify(user),
-      });
-  
-      if (!response.ok) {
-        const text = await response.text();
-        alert("Login failed: " + text);
-        return;
-      }
-  
-      const token = await response.text();
-      localStorage.setItem("token", token);
-      console.log("TOKEN:", token); 
-      localStorage.setItem("isAuthenticated", "true");
-      navigate('/user');
+        const response = await fetch('http://localhost:8089/api/users/login', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user),
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            alert("Login failed: " + text); // Prikazivanje greške korisniku
+            return;
+        }
+
+        const token = await response.text();
+        localStorage.setItem("token", token);  // Spremanje JWT tokena u localStorage
+        console.log("TOKEN:", token);
+
+        // Oznaka da je korisnik ulogovan
+        localStorage.setItem("isAuthenticated", "true");
+
+        // Redirektuj korisnika na /user stranicu
+        navigate('/user');
     } catch (err) {
-      alert("Greška: Backend ne radi ili je pogrešan URL.");
-      console.error(err);
+        alert("Greška: Backend ne radi ili je pogrešan URL.");
+        console.error(err);
     }
-  };
+};
+
 
   return (
     <div className="login-container">

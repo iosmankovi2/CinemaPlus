@@ -100,4 +100,3 @@ public class Movie {
         this.currentlyShowing = currentlyShowing;
     }
 }
-

@@ -75,17 +75,26 @@ public User loginUser(String email, String password) {
 
 
 public User authenticateUser(String email, String password) {
-    Optional<User> userOptional = userRepository.findByEmail(email);
-    if (userOptional.isPresent()) {
-        User user = userOptional.get();
-        if (passwordEncoder.matches(password, user.getPassword())) {
-            user.setLastLogin(LocalDate.now().toString()); // Ažuriraj lastLogin
-            userRepository.save(user); // Sačuvaj promjenu
-            return user;
-        }
+    System.out.println("Pokušaj autentifikacije: " + email);
+    Optional<User> optionalUser = userRepository.findByEmail(email);
+    if (optionalUser.isEmpty()) {
+        System.out.println("Email ne postoji u bazi.");
+        return null;
     }
-    return null;
+
+    User user = optionalUser.get();
+
+    System.out.println("Upoređujem lozinke...");
+    if (passwordEncoder.matches(password, user.getPassword())) {
+        System.out.println("Lozinka odgovara.");
+        return user;
+    } else {
+        System.out.println("Lozinka NIJE tačna.");
+        return null;
+    }
 }
+
+
 
 
 
