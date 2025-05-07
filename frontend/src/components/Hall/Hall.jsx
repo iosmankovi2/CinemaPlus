@@ -27,6 +27,7 @@ const Hall = () => {
   };
 
   return (
+  
     <div className="halls-wrapper">
       <h2 className="hall-title">Sale u Kinu</h2>
       <div className="halls-grid">
@@ -43,6 +44,7 @@ const Hall = () => {
         ))}
       </div>
     </div>
+    
   );
 };
 
