@@ -1,7 +1,7 @@
-// Hall.jsx
 import React, { useEffect, useState } from 'react';
 import './Hall.css';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 import D3Image from '../../assets/3D.jpg';
 import D4Image from '../../assets/4D.jpg';
 import ProslavaImage from '../../assets/Proslava.jpg';
@@ -9,7 +9,6 @@ import DefaultImage from '../../assets/popcorn-cinema.jpg';
 
 const Hall = () => {
   const [halls, setHalls] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:8089/api/halls`)
@@ -17,30 +16,53 @@ const Hall = () => {
       .then(data => setHalls(data));
   }, []);
 
+  // Dodavanje slika za oba jezika
   const getImageForHall = (name) => {
     switch (name) {
-      case '3D Sala': return D3Image;
-      case '4D Sala': return D4Image;
-      case 'Rođendaonica': return ProslavaImage;
-      default: return DefaultImage;
+      case '3D Sala':
+      case '3D Hall':
+        return D3Image;
+      case '4D Sala':
+      case '4D Hall':
+        return D4Image;
+      case 'Rođendaonica':
+      case 'Birthday party venue':
+        return ProslavaImage;
+      default:
+        return DefaultImage;
+    }
+  };
+
+  // Prevod naziva sale
+  const translateHallName = (name) => {
+    switch (name) {
+      case '3D Sala': return '3D Hall';
+      case '4D Sala': return '4D Hall';
+      case 'Rođendaonica': return 'Birthday party venue';
+      default: return name;
     }
   };
 
   return (
     <div className="halls-wrapper">
-      <h2 className="hall-title">Sale u Kinu</h2>
+      <h2 className="hall-title">Cinema Halls</h2>
       <div className="halls-grid">
-        {halls.map(hall => (
-          <div key={hall.id} className="hall-card">
-            <img src={getImageForHall(hall.name)} alt={hall.name} className="hall-image" />
-            <h3>{hall.name}</h3>
-            <p>Ukupno sjedišta: {hall.totalSeats}</p>
-            <p>Slobodna sjedišta: {hall.availableSeats}</p>
-            <Link to={`/sale/${hall.id}`} state={{ hallName: hall.name }}>
-              <button>Prikaži sjedišta</button>
-            </Link>
-          </div>
-        ))}
+        {halls.map(hall => {
+          const translatedName = translateHallName(hall.name);
+          const image = getImageForHall(hall.name);
+
+          return (
+            <div key={hall.id} className="hall-card">
+              <img src={image} alt={translatedName} className="hall-image" />
+              <h3>{translatedName}</h3>
+              <p>Total seats: {hall.totalSeats}</p>
+              <p>Available seats: {hall.availableSeats}</p>
+              <Link to={`/sale/${hall.id}`} state={{ hallName: translatedName }}>
+                <button>Show seats</button>
+              </Link>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

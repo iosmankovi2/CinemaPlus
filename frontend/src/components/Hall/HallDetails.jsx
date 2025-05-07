@@ -7,6 +7,7 @@ const HallDetails = () => {
 
   return (
     <div>
+
       <SeatGrid hallId={hallId} />
     </div>
   );
