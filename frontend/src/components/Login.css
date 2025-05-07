@@ -1,0 +1,142 @@
+/* Login.css */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    color: white;
+  }
+  
+  .login-box {
+    background-color: #18181b;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .login-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .logo {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #ef4444;
+  }
+  
+  .logo .highlight {
+    color: white;
+  }
+  
+  .welcome {
+    margin-top: 0.5rem;
+    font-size: 1.125rem;
+  }
+  
+  .subtext {
+    font-size: 0.875rem;
+    color: #9ca3af;
+  }
+  
+  .login-toggle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  
+  .login-btn {
+    background: #dc2626;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+  }
+  
+  .register-btn {
+    background: white;
+    color: black;
+    padding: 0.5rem 1rem;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .input-label {
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .input-full {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    background: black;
+    border: 1px solid #374151;
+    color: white;
+  }
+  
+  .password-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .forgot-link {
+    font-size: 0.75rem;
+    color: #ef4444;
+    text-decoration: none;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    background: #dc2626;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    transition: background 0.3s;
+  }
+  
+  .submit-btn:hover {
+    background: #b91c1c;
+  }
+  
+  .or-text {
+    text-align: center;
+    color: #9ca3af;
+    margin-top: 1rem;
+  }
+  
+  .social-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+  
+  .social-btn {
+    width: 48%;
+    background: white;
+    color: black;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+  }
+  
+  .terms-text {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  
+  .terms-text .highlight {
+    color: #ef4444;
+  }
+  
