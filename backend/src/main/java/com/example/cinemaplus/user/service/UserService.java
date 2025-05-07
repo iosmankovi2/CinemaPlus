@@ -1,6 +1,6 @@
 package com.example.cinemaplus.user.service;
 
-import com.example.cinemaplus.reservation.model.Reservation;
+
 import com.example.cinemaplus.user.dto.UserDTO;
 import com.example.cinemaplus.user.model.User;
 import com.example.cinemaplus.user.repository.UserRepository;
@@ -95,11 +95,7 @@ public List<User> getAllUsers() {
         userRepository.delete(user);
     }
 
-    public List<Reservation> getUserHistory(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found."));
-        return user.getReservations();
-    }
+
 
     // --- Helper method for validation ---
     private void validateUserDTO(UserDTO userDTO) {

@@ -1,6 +1,6 @@
 package com.example.cinemaplus.user.model;
 
-import com.example.cinemaplus.reservation.model.Reservation;
+
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -34,8 +34,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Reservation> reservations;
+
 
     private String dateCreated;
     private String lastLogin;
@@ -114,13 +113,6 @@ public User(String firstName, String lastName, String email, String password, Ro
         this.userStatus = status;
     }
 
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
 
     public String getDateCreated() {
         return dateCreated;

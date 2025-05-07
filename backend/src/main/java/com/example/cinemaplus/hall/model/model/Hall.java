@@ -1,6 +1,6 @@
 package com.example.cinemaplus.hall.model.model;
 
-import com.example.cinemaplus.projection.model.Projection;
+
 import com.example.cinemaplus.seat.model.model.Seat;
 import jakarta.persistence.*;
 
@@ -16,9 +16,6 @@ public class Hall {
     private String name;
     private int numberOfRows;
     private int seatsPerRow;
-
-    @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL)
-    private List<Projection> projections;
 
     @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL)
     private List<Seat> seats;
@@ -67,13 +64,6 @@ public class Hall {
         this.seatsPerRow = seatsPerRow;
     }
 
-    public List<Projection> getProjections() {
-        return projections;
-    }
-
-    public void setProjections(List<Projection> projections) {
-        this.projections = projections;
-    }
 
     public List<Seat> getSeats() {
         return seats;

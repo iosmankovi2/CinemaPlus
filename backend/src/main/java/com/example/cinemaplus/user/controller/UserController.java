@@ -1,6 +1,6 @@
 package com.example.cinemaplus.user.controller;
 
-import com.example.cinemaplus.reservation.model.Reservation;
+
 import com.example.cinemaplus.user.dto.UserDTO;
 import com.example.cinemaplus.user.model.User;
 import com.example.cinemaplus.user.service.UserService;
@@ -79,14 +79,5 @@ public ResponseEntity<List<User>> getAllUsers() {
         }
     }
 
-    // Historija rezervacija korisnika
-    @GetMapping("/{id}/history")
-    public ResponseEntity<List<Reservation>> getUserHistory(@PathVariable Long id) {
-        try {
-            List<Reservation> reservations = userService.getUserHistory(id);
-            return new ResponseEntity<>(reservations, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+
 }
