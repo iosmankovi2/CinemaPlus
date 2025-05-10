@@ -1,11 +1,15 @@
 package com.example.cinemaplus.user.controller;
 
+import java.io.Console;
+
 import com.example.cinemaplus.reservation.model.Reservation;
+import com.example.cinemaplus.user.dto.UpdateUserDTO;
 import com.example.cinemaplus.user.dto.UserDTO;
 import com.example.cinemaplus.user.model.User;
 import com.example.cinemaplus.user.service.UserService;
 
 import jakarta.validation.Valid;
+
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,19 +58,22 @@ public ResponseEntity<List<User>> getAllUsers() {
     }
 
     // Ažuriranje korisnika
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO updatedUserDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>("Validation failed: " + bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            userService.updateUser(id, updatedUserDTO);
-            return ResponseEntity.ok("User updated successfully");
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error during update: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+  @PutMapping("/{id}")
+  public ResponseEntity<String> updateUser(@PathVariable Long id,
+                                         @Valid @RequestBody UpdateUserDTO updatedUserDTO,
+                                         BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+        return new ResponseEntity<>("Validation failed: " + bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
     }
+
+    try {
+        userService.updateUser(id, updatedUserDTO);
+        return ResponseEntity.ok("User updated successfully");
+    } catch (Exception e) {
+        return new ResponseEntity<>("Error during update: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+
 
     // Brisanje korisnika
     @DeleteMapping("/{id}")

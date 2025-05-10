@@ -28,3 +28,24 @@
 .filter-input::placeholder {
   color: #777;
 }
+.search-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+.filter-input {
+  padding: 8px 12px 8px 32px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background-color: #1f1f1f;
+  color: white;
+  font-size: 14px;
+}

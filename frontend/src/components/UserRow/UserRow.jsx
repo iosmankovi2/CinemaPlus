@@ -1,12 +1,13 @@
 import React from "react";
 import "./UserRow.css";
 
-const UserRow = ({ user }) => {
+const UserRow = ({ user, onDelete, onEdit}) => {
   return (
     <tr className="user-row">
       <td>
         <div>
-          <div className="user-name">{user.name}</div>
+          <div className="user-name">{user.firstName}</div>
+          <div className="user-lastName">{user.lastName}</div>
           <div className="user-email">{user.email}</div>
         </div>
       </td>
@@ -16,15 +17,15 @@ const UserRow = ({ user }) => {
         </span>
       </td>
       <td>
-        <span className={`status-tag status-${user.status.toLowerCase()}`}>
-          {user.status}
+        <span className={`status-tag status-${user.userStatus.toLowerCase()}`}>
+          {user.userStatus.toLowerCase()}
         </span>
       </td>
       <td>{new Date(user.lastLogin).toLocaleString()}</td>
       <td>{user.bookings}</td>
       <td>
-          <button className="edit-btn">Edit</button>
-          <button className="delete-btn">Delete</button>
+          <button className="edit-btn" onClick={()=>onEdit(user)}>Edit</button>
+          <button className="delete-btn"onClick={() => onDelete(user.id)} >Delete</button>
       </td>
     </tr>
   );
