@@ -11,6 +11,8 @@ import Sale from './components/Hall/Hall';
 import HallDetails from './components/Hall/HallDetails';
 import MovieSection from './components/MovieSection/MovieSection';
 import MovieDetails from './components/MovieDetails/MovieDetails';
+import UserTable from './components/UserTable/UserTable';
+
 
 function App() {
   return (
@@ -26,9 +28,8 @@ function App() {
           <Route path="movies" element={<MovieSection />} />
           <Route path="movies/:id" element={<MovieDetails />} />
           <Route path="projections" element={<MovieDetails />} />
-       
+          <Route path="users" element={<UserTable />} />
       </Routes>
-
     </Router>
   );
 }

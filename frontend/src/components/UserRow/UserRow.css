@@ -1,0 +1,100 @@
+.user-row {
+  border-bottom: 1px solid #2c2c2c;
+}
+
+.user-name {
+  font-weight: bold;
+  color: #f5f5f5;
+}
+.user-lastName {
+  font-weight: bold;
+  color: #f5f5f5;
+}
+
+.user-email {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+/* ROLE TAG */
+.role-tag {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 16px;
+  color: white;
+  display: inline-block;
+  text-transform: capitalize;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.role-admin{
+  background: linear-gradient(135deg, #a855f7, #9333ea);
+}
+
+.role-user {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.role-guest {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+/* STATUS TAG */
+.status-tag {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 16px;
+  display: inline-block;
+  text-transform: capitalize;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+  letter-spacing: 0.5px;
+  transition: transform 0.2s ease;
+}
+
+.status-active {
+  background-color: #22c55e;
+  color: black;
+}
+
+.status-suspended {
+  background-color: #f87171;
+  color: black;
+}
+
+/* DUGMAD */
+.edit-btn,
+.delete-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  min-width: 64px;
+  text-align: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.edit-btn {
+  background-color: #3b82f6;
+  color: white;
+  margin-right: 8px;
+}
+
+.edit-btn:hover {
+  background-color: #60a5fa;
+  transform: scale(1.05);
+}
+
+.delete-btn {
+  background-color: #ef4444;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #f87171;
+  transform: scale(1.05);
+}
