@@ -1,0 +1,96 @@
+/* Pozadina i overlay */
+.home-background {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Navigacija */
+.navbar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.887);
+  z-index: 10;
+}
+
+.logo {
+  font-size: 1.5rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cinema-red {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+.plus-white {
+  color: white;
+  font-weight: bold;
+}
+
+/* Logout button */
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.logout-btn {
+  background-color: #ef4444;
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #d43f3f;
+}
+
+/* User page content */
+.home-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.home-content h1 {
+  color: white;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+/* Dodatne stilove za dugmadi i sadržaj */
+button {
+  background-color: #ef4444;
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 18px;
+}
+
+button:hover {
+  background-color: #d43f3f;
+}

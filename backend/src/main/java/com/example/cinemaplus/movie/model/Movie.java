@@ -125,4 +125,3 @@ public class Movie {
         this.imageUrl = imageUrl;
     }
 }
-
