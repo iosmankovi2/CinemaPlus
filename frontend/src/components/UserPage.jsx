@@ -8,13 +8,6 @@ import { Link } from 'react-router-dom';
 
 
 function UserPage() {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated"); // Clear authentication state
-    navigate('/login');
-  };
-
   return (
     <div className="user-page">
       <header className="navbar">

@@ -8,5 +8,9 @@ public record ProjectionsDTO(
     Long id,
     LocalDateTime startTime,
     ProjectionType projectionType,
-    double ticketPrice
+    double ticketPrice,
+    String movieTitle,
+    String hallName
 ) {}
+
+

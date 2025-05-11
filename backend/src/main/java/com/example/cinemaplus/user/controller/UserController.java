@@ -1,6 +1,7 @@
 package com.example.cinemaplus.user.controller;
-
+import java.io.Console;
 import com.example.cinemaplus.reservation.model.Reservation;
+import com.example.cinemaplus.user.dto.UpdateUserDTO;
 import com.example.cinemaplus.user.dto.UserDTO;
 import com.example.cinemaplus.user.model.User;
 import com.example.cinemaplus.user.service.UserService;
@@ -8,7 +9,6 @@ import java.util.Date;
 import com.example.cinemaplus.security.CustomUserDetails;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-
 import com.example.cinemaplus.security.JwtTokenUtil;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
@@ -52,7 +52,7 @@ public ResponseEntity<List<User>> getAllUsers() {
      System.out.println("Pokušaj logina: " + loginRequest.getEmail());
  
      // Provjera korisnika
-     User user = userService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
+     User user = userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
      if (user != null) {
          System.out.println("User pronađen: " + user.getEmail());
          String token = JwtTokenUtil.generateJwtToken(user);
@@ -69,25 +69,28 @@ public ResponseEntity<User> getLoggedInUser(@AuthenticationPrincipal CustomUserD
 }
 
     // Ažuriranje korisnika
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO updatedUserDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>("Validation failed: " + bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            userService.updateUser(id, updatedUserDTO);
-            return ResponseEntity.ok("User updated successfully");
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error during update: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+  @PutMapping("/{id}")
+  public ResponseEntity<String> updateUser(@PathVariable Long id,
+                                         @Valid @RequestBody UpdateUserDTO updatedUserDTO,
+                                         BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+        return new ResponseEntity<>("Validation failed: " + bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
     }
+
+    try {
+        userService.updateUser(id, updatedUserDTO);
+        return ResponseEntity.ok("User updated successfully");
+    } catch (Exception e) {
+        return new ResponseEntity<>("Error during update: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
 
     @PreAuthorize("hasRole('ROLE_Admin')")
 @GetMapping("/admin/data")
 public ResponseEntity<String> adminData() {
     return ResponseEntity.ok("Samo ADMIN vidi ovo.");
 }
+
 
 
     // Brisanje korisnika
