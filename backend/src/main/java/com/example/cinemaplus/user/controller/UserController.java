@@ -104,14 +104,9 @@ public ResponseEntity<String> adminData() {
         }
     }
 
-    // Historija rezervacija korisnika
-    @GetMapping("/{id}/history")
-    public ResponseEntity<List<Reservation>> getUserHistory(@PathVariable Long id) {
-        try {
-            List<Reservation> reservations = userService.getUserHistory(id);
-            return new ResponseEntity<>(reservations, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @GetMapping("/active-count")
+    public Long countAllUsers() {
+        return (long) userService.getAllUsers().size();
+    
     }
 }

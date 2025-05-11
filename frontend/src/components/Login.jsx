@@ -42,7 +42,7 @@ export default function Login() {
     <div className="login-container">
       <div className="login-box">
         <div className="login-header">
-          🎞️ <span className="cinema-red">Cinem</span>
+          🎞️ <span className="cinema-red">Cinema</span>
           <span className="plus-white">Plus</span>
           <p className="welcome">Welcome back</p>
           <p className="subtext">Enter your credentials to access your account</p>

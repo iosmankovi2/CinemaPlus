@@ -31,6 +31,12 @@ public class MovieController {
     public Movie getMovieById(@PathVariable Long id) {
      return movieService.getMovieById(id).orElse(null);
 }
+    @GetMapping("/active-count")
+    public Long countAllMovies() {
+        return (long) movieService.getAllMovies().size();
+    }
+    
+
 
 }
 
