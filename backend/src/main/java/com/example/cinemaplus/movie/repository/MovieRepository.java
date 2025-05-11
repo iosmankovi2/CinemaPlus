@@ -1,7 +1,6 @@
 package com.example.cinemaplus.movie.repository;
 
 import java.util.List;
-
 import org.springframework.stereotype.Repository;
 
 import com.example.cinemaplus.movie.model.Movie;
@@ -25,5 +24,12 @@ public class MovieRepository {
     public Movie findById(long id) {
        return entityManager.find(Movie.class, id);
     }
+    public Long countAllMovies() {
+        return (Long) entityManager
+            .createQuery("SELECT COUNT(m) FROM Movie m WHERE m.currentlyShowing = true")
+            .getSingleResult();
+    }
+    
+
     
 }
