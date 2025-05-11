@@ -63,7 +63,7 @@ const MovieDetails = () => {
           <p>{movie.director}</p>
 
           <p className="movie-section-title">Cast</p>
-          <p>{movie.cast}</p>
+          <p>{movie.movieCast}</p>
 
           {/* Prikaži screenings samo ako je currentlyShowing */}
           {movie.currentlyShowing ? (
