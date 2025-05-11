@@ -10,7 +10,7 @@ const MovieDetails = () => {
   const [projections, setProjections] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:8089/api/movies/${id}`)
+    fetch(`/api/movies/${id}`)
       .then(res => res.json())
       .then(data => setMovie(data));
   }, [id]);
@@ -26,8 +26,8 @@ const MovieDetails = () => {
   useEffect(() => {
     if (!movie || !movie.currentlyShowing) return;
     const date = getDateForDay(selectedDay).toISOString().split('T')[0];
-    fetch(`http://localhost:8089/api/projections?movieId=${movie.id}&date=${date}`)
-      .then(res => res.json())
+    fetch(`/api/projections/by-date?movieId=${id}&date=${date}`)
+    .then(res => res.json())
       .then(data => setProjections(data));
   }, [selectedDay, movie]);
 

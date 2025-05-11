@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../AddScreeningsModal/AddScreeningsModal.css"; 
+import "./EditScreeningModal.css"; 
 
 const EditScreeningModal = ({ visible, onClose, onSave, projection }) => {
   const [form, setForm] = useState({

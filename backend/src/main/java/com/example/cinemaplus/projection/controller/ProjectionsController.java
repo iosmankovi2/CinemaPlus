@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.function.Supplier;
-
 import com.example.cinemaplus.hall.model.model.Hall;
 import com.example.cinemaplus.hall.model.repository.HallRepository;
 import com.example.cinemaplus.movie.model.Movie;
@@ -47,7 +45,7 @@ public class ProjectionsController {
         this.projectionRepository = projectionRepository;
     }
 
-    @GetMapping("/api/projections")
+    @GetMapping("/by-date")
     public List<ProjectionsDTO> getProjectionsByMovieAndDate(
         @RequestParam Long movieId,
         @RequestParam String date) {
@@ -155,15 +153,15 @@ public class ProjectionsController {
         projectionRepository.save(existing);
 
         ProjectionsDTO responseDto = new ProjectionsDTO(
-            existing.getId(),
-            existing.getStartTime(),
-            existing.getProjectionType(),
-            existing.getTicketPrice(),
-            existing.getMovie().getTitle(),
-            existing.getHall().getName()
-        );
-    
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+        existing.getId(),
+        existing.getStartTime(),
+        existing.getProjectionType(),
+        existing.getTicketPrice(),
+        movie.getTitle(),
+        optionalHall.get().getName()
+    );
+
+    return ResponseEntity.ok(responseDto);
     }
 
 

@@ -127,6 +127,7 @@ const handleCancel = (id) => {
                   return res.json();
                 })
                 .then(newScreening => {
+                  window.location.reload(); 
                   setScreenings(prev => [...prev, newScreening]);
                   setShowAddModal(false);
                 })
@@ -152,8 +153,12 @@ const handleCancel = (id) => {
                   if (!res.ok) throw new Error("Failed to update screening");
                   return res.json();
                 })
-                .then(updated => {
-                  setScreenings(prev => prev.map(p => p.id === id ? { ...p, ...updatedForm } : p));
+                .then(() => {
+                  return fetch("/api/projections/all");
+                })
+                .then(res => res.json())
+                .then(data => {
+                  setScreenings(data);
                   setShowEditModal(false);
                   setEditingProjection(null);
                 })
@@ -162,6 +167,7 @@ const handleCancel = (id) => {
                   alert("Could not update screening.");
                 });
             }}
+            
         />
 
             </div>
