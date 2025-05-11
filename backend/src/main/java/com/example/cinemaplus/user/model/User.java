@@ -1,6 +1,8 @@
 package com.example.cinemaplus.user.model;
 
 import com.example.cinemaplus.reservation.model.Reservation;
+import com.example.cinemaplus.user.model.Role;
+import com.example.cinemaplus.user.model.UserStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

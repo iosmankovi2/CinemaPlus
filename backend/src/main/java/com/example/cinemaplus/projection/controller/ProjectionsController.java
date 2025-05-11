@@ -95,11 +95,11 @@ public class ProjectionsController {
         p.setProjectionType(dto.getProjectionType());
         p.setTicketPrice(dto.getTicketPrice());
     
-       Movie movie = movieRepository.findById(dto.getMovieId());
-        if (movie == null) {
+       Optional<Movie> movie = movieRepository.findById(dto.getMovieId());
+        if (movie.isEmpty()) {
             throw new RuntimeException("Movie not found");
         }
-        p.setMovie(movie);
+        p.setMovie(movie.get());
         p.setHall(
             hallRepository.findById(dto.getHallId())
                 .orElseThrow(new java.util.function.Supplier<RuntimeException>() {
@@ -138,8 +138,8 @@ public class ProjectionsController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hall not found");
         }
 
-        Movie movie = movieRepository.findById(dto.getMovieId());
-        if (movie == null) {
+        Optional<Movie> movie = movieRepository.findById(dto.getMovieId());
+        if (movie.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Movie not found");
         }
 
@@ -147,7 +147,7 @@ public class ProjectionsController {
         existing.setStartTime(dto.getStartTime());
         existing.setProjectionType(dto.getProjectionType());
         existing.setTicketPrice(dto.getTicketPrice());
-        existing.setMovie(movie);
+        existing.setMovie(movie.get());
         existing.setHall(optionalHall.get());
 
         projectionRepository.save(existing);
@@ -157,7 +157,7 @@ public class ProjectionsController {
         existing.getStartTime(),
         existing.getProjectionType(),
         existing.getTicketPrice(),
-        movie.getTitle(),
+        movie.get().getTitle(),
         optionalHall.get().getName()
     );
 
