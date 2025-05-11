@@ -12,6 +12,7 @@ import HallDetails from './components/Hall/HallDetails';
 import MovieSection from './components/MovieSection/MovieSection';
 import MovieDetails from './components/MovieDetails/MovieDetails';
 import UserTable from './components/UserTable/UserTable';
+import ScreeningsPage from './components/ScreeningPage/ScreeningPage';
 
 
 function App() {
@@ -29,6 +30,8 @@ function App() {
           <Route path="movies/:id" element={<MovieDetails />} />
           <Route path="projections" element={<MovieDetails />} />
           <Route path="users" element={<UserTable />} />
+          <Route path="admin/screenings" element={<ScreeningsPage/>} />
+
       </Routes>
     </Router>
   );

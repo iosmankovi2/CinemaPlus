@@ -22,7 +22,6 @@ public class Projection {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JsonIgnore
     private Movie movie;
 
     @ManyToOne(optional = false)

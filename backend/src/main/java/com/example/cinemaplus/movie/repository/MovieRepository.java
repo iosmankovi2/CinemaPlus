@@ -23,7 +23,7 @@ public class MovieRepository {
     }
 
     public Movie findById(long id) {
-        return entityManager.find(Movie.class, id);
+       return entityManager.find(Movie.class, id);
     }
     
 }
