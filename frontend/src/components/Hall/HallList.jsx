@@ -5,7 +5,7 @@ import './HallList.css';
 import D4Image from '../../assets/4D.jpg';
 import D3Image from '../../assets/3D.jpg';
 import ProslavaImage from '../../assets/Proslava.jpg';
-import DefaultImage from '../../assets/popcorn-cinema.jpg';
+
 
 const HallList = () => {
   const [halls, setHalls] = useState([]);
@@ -31,31 +31,30 @@ const HallList = () => {
     fetchHalls();
   }, []);
 
-  // Funkcija za izbor slike prema imenu sale
+
   const getImageForHall = (name) => {
     switch (name) {
-      case '4D Sala':
+      case '4D Hall':
         return D4Image;
-      case '3D Sala':
+      case '3D Hall':
         return D3Image;
-      case 'Rođendaonica':
+      case 'Birthday party venue':
         return ProslavaImage;
-      default:
-        return DefaultImage;
+
     }
   };
 
   if (loading) {
-    return <div>Učitavanje sala...</div>;
+    return <div>Loading halls...</div>;
   }
 
   if (error) {
-    return <div>Došlo je do greške pri učitavanju sala: {error.message}</div>;
+    return <div>An error occurred while loading halls: {error.message}</div>;
   }
 
   return (
     <div className="hall-list-container">
-      <h2>Dostupne Sale</h2>
+      <h2>Available Halls</h2>
       <div className="hall-list">
         {halls.map(hall => (
           <HallCard key={hall.id} hall={hall} image={getImageForHall(hall.name)} />
