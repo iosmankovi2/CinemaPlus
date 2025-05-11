@@ -52,7 +52,7 @@ public ResponseEntity<List<User>> getAllUsers() {
      System.out.println("Pokušaj logina: " + loginRequest.getEmail());
  
      // Provjera korisnika
-     User user = userService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
+     User user = userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
      if (user != null) {
          System.out.println("User pronađen: " + user.getEmail());
          String token = JwtTokenUtil.generateJwtToken(user);

@@ -10,7 +10,7 @@ const Layout = () => {
           🎞️ <span><span className="cinema-red">Cinema</span><span className="plus-white">Plus</span></span>
         </Link>
         <nav className="nav-links">
-          <Link to="/sale" className="nav-link">Sale</Link>
+          <Link to="/sale" className="nav-link">Halls</Link>
           <Link to="/login" className="nav-link">Login</Link>
           <Link to="/register" className="nav-link">Register</Link>
         </nav>
