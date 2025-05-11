@@ -53,7 +53,7 @@ export default function Register() {
     <div className="register-container">
       <div className="register-box">
         <div className="register-header">
-          🎞️ <span className="cinema-red">Cinem</span><span className="plus-white">Plus</span>
+          🎞️ <span className="cinema-red">Cinema</span><span className="plus-white">Plus</span>
           <p className="welcome">Create your account</p>
           <p className="subtext">Enter your information to get started</p>
         </div>

@@ -32,9 +32,10 @@ public class MovieController {
      return movieService.getMovieById(id).orElse(null);
 }
     @GetMapping("/active-count")
-    public Long getActiveMovieCount() {
-        return movieService.countAllMovies();
+    public Long countAllMovies() {
+        return (long) movieService.getAllMovies().size();
     }
+    
 
 
 }

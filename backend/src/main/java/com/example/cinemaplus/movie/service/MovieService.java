@@ -23,7 +23,5 @@ public class MovieService {
     public Optional<Movie> getMovieById(Long id) {
         return movieRepository.findById(id);
     }
-    public Long countAllMovies() {
-        return movieRepository.countAllMovies();
-    }
+    
 }
