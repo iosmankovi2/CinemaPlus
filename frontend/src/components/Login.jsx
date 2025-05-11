@@ -1,46 +1,41 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import {AuthContext} from "../context/AuthContext";
 
 export default function Login() {
-  const [user, setUser] = useState({ email: '', password: '' });
-  const navigate = useNavigate();
+    const [user, setUser] = useState({ email: '', password: '' });
+    const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
 
-  const handleChange = (e) =>
-    setUser({ ...user, [e.target.name]: e.target.value });
+    const handleChange = (e) =>
+        setUser({ ...user, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    try {
-        const response = await fetch('http://localhost:8089/api/users/login', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(user),
-        });
+        try {
+            const response = await fetch('http://localhost:8089/api/users/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(user),
+            });
 
-        if (!response.ok) {
-            const text = await response.text();
-            alert("Login failed: " + text); // Prikazivanje greške korisniku
-            return;
+            if (!response.ok) {
+                const text = await response.text();
+                alert('Login failed: ' + text);
+                return;
+            }
+
+            const token = await response.text();
+            login(token); // <== this updates context & localStorage
+            navigate('/user');
+        } catch (err) {
+            alert('Error: Backend not running or wrong URL.');
+            console.error(err);
         }
+    };
 
-        const token = await response.text();
-        localStorage.setItem("token", token);  // Spremanje JWT tokena u localStorage
-        console.log("TOKEN:", token);
-
-        // Oznaka da je korisnik ulogovan
-        localStorage.setItem("isAuthenticated", "true");
-
-        // Redirektuj korisnika na /user stranicu
-        navigate('/user');
-    } catch (err) {
-        alert("Greška: Backend ne radi ili je pogrešan URL.");
-        console.error(err);
-    }
-};
 
 
   return (

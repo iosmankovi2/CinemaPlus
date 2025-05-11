@@ -1,5 +1,6 @@
 package com.example.cinemaplus.movie.service;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
-    public Movie getMovieById(Long id) {
+    public Optional<Movie> getMovieById(Long id) {
         return movieRepository.findById(id);
     }
     public Long countAllMovies() {

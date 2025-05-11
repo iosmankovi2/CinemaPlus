@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.example.cinemaplus.hall.model.model.Hall;
 import com.example.cinemaplus.movie.model.Movie;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.cinemaplus.projection.model.ProjectionType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
