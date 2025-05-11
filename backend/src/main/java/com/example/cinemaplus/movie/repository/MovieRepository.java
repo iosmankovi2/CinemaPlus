@@ -1,29 +1,12 @@
 package com.example.cinemaplus.movie.repository;
 
-import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.cinemaplus.movie.model.Movie;
 import org.springframework.stereotype.Repository;
 
-import com.example.cinemaplus.movie.model.Movie;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 
 @Repository
-public class MovieRepository {
+public interface MovieRepository extends JpaRepository<Movie, Long> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Transactional
-    public List<Movie> findAll() {
-        return entityManager.createQuery("SELECT m FROM Movie m", Movie.class)
-                            .getResultList();
-    }
-
-    public Movie findById(long id) {
-       return entityManager.find(Movie.class, id);
-    }
-    
 }
