@@ -7,7 +7,7 @@ const MovieSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:8089/api/movies')
+    fetch('/api/movies')
       .then((res) => res.json())
       .then((data) => setMovies(data))
       .catch((err) => console.error("Greška pri dohvatu filmova:", err));
@@ -15,7 +15,7 @@ const MovieSection = () => {
 
   const filteredMovies = movies.filter((movie) => {
     const term = searchTerm.toLowerCase();
-    console.log('CAST:', movie.movieCast); // 👈 loguj vrijednost
+    console.log('CAST:', movie.movieCast); 
   
     return (
       movie.title?.toLowerCase().includes(term) ||

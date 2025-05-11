@@ -5,7 +5,7 @@ import "./UserTable.css";
 import ConfirmDeleteModal from "../ConfirmDeleteModal/ConfirmDeleteModal";
 import EditUserModal from "../EditUserModal/EditUserModal";
 import AddUserModal from "../AddUserModal/AddUserModal";
-import { FaUserPlus, FaSearch, FaUser, FaFilter } from "react-icons/fa";
+import { FaUserPlus} from "react-icons/fa";
 
 
 const UserTable = () => {
@@ -22,7 +22,7 @@ const UserTable = () => {
     fetch("/api/users/")
       .then((res) => res.json())
       .then((data) => {
-        console.log("API response:", data); // 👈 vidi šta stiže
+        console.log("API response:", data); 
         setUsers(data);
       })
       .catch((err) => console.error("Error fetching users:", err));
@@ -111,12 +111,18 @@ const handleSaveEdit = (id, updatedData) => {
   
   
   return (
-    <div className="table-container">
-      <Filters setRole={setRole} setStatus={setStatus} setSearchTerm={setSearchTerm}/>
+    <div className="user-header">
+    <div className="user-header-top">
+      <h2 className="user-page-title">User Management</h2>
       <button className="add-user-btn" onClick={() => setShowAddModal(true)}>
-  <FaUserPlus style={{ marginRight: "6px" }} />
-  Add User
-</button>
+        <FaUserPlus style={{ marginRight: "6px" }} />
+        Add User
+      </button>
+  </div>
+    <div className="table-container">
+    <h3>List of Users</h3>
+    <p className="subtitle">Manage all registered users, roles and activity status</p>
+      <Filters setRole={setRole} setStatus={setStatus} setSearchTerm={setSearchTerm}/>
       <table>
         <thead>
           <tr>
@@ -156,11 +162,8 @@ const handleSaveEdit = (id, updatedData) => {
   onClose={() => setShowAddModal(false)}
   onSave={handleAddUser}
 />
-
-
-
     </div>
-    
+    </div>
   );
   
 };

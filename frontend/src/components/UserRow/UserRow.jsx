@@ -24,8 +24,8 @@ const UserRow = ({ user, onDelete, onEdit}) => {
       <td>{new Date(user.lastLogin).toLocaleString()}</td>
       <td>{user.bookings}</td>
       <td>
-          <button className="edit-btn" onClick={()=>onEdit(user)}>Edit</button>
-          <button className="delete-btn"onClick={() => onDelete(user.id)} >Delete</button>
+          <button className="edit-btn" onClick={()=>onEdit(user)}>✏️ Edit</button>
+          <button className="delete-btn"onClick={() => onDelete(user.id)} >🗑 Delete</button>
       </td>
     </tr>
   );

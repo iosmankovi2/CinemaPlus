@@ -7,13 +7,16 @@ import com.example.cinemaplus.user.model.Role;
 import com.example.cinemaplus.user.model.User;
 import com.example.cinemaplus.user.model.UserStatus;
 import com.example.cinemaplus.user.repository.UserRepository;
+
 import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -63,6 +66,25 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+    public User authenticateUser(String email, String password) {
+        System.out.println("Pokušaj autentifikacije: " + email);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            System.out.println("Email ne postoji u bazi.");
+            return null;
+        }
+    
+        User user = optionalUser.get();
+    
+        System.out.println("Upoređujem lozinke...");
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            System.out.println("Lozinka odgovara.");
+            return user;
+        } else {
+            System.out.println("Lozinka NIJE tačna.");
+            return null;
+        }
     }
     @Transactional
     public void deleteUser(Long id) {
