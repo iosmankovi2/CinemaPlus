@@ -20,7 +20,7 @@ function App() {
     <Router>
       <Routes>
         {/* Sve stranice unutar Layouta imaju zajednički navbar */}
-        <Route path="/" element={<Layout />}/>
+        <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
@@ -32,6 +32,7 @@ function App() {
           <Route path="projections" element={<MovieDetails />} />
           <Route path="users" element={<UserTable />} />
           <Route path="admin/screenings" element={<ScreeningsPage/>} />
+          </Route>
       </Routes>
     </Router>
   );
