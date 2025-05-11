@@ -1,11 +1,26 @@
-body {
+/* RESET I GLOBALNO */
+* {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #000; /* crna pozadina */
-  color: white; /* bijeli tekst */
+  padding: 0;
+  box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  width: 100%;
+  background-color: #000; /* crna pozadina */
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+}
+
+/* FIKSNI NAVBAR */
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,6 +28,7 @@ body {
   padding: 15px 30px;
 }
 
+/* LOGO */
 .logo {
   font-size: 24px;
   color: #fff;
@@ -27,12 +43,24 @@ body {
   color: white;
 }
 
+/* LINKOVI */
+.nav-links {
+  display: flex;
+}
+
 .nav-links .nav-link {
   margin-left: 20px;
   color: white;
   text-decoration: none;
 }
 
-.main-content {
-  padding: 20px;
+.nav-links .nav-link:hover {
+  color: red;
+}
+
+/* SADRŽAJ ISPOD NAVBARA */
+.main-content, .layout-content {
+  padding-top: 100px; /* da ne bude iza navbar-a */
+  min-height: 100vh;
+  background-color: #000;
 }

@@ -1,32 +1,22 @@
-.home-background {
-  height: 100vh;
-  background-size: cover;
-  background-position: center;
-  position: relative;
+/* Glavni kontejner */
+.home-container {
+  padding-top: 100px; /* da ne preklapa navbar */
 }
 
-.overlay {
-  background-color: rgba(0, 0, 0, 0.6); 
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
+/* Navigacija */
 .navbar {
-  position: absolute;
+  position: fixed;
   top: 0;
   width: 100%;
   padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(0, 0, 0, 0.887);
-  z-index: 10;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
 }
 
+/* Logo */
 .logo {
   font-size: 1.5rem;
   text-decoration: none;
@@ -45,7 +35,7 @@
   font-weight: bold;
 }
 
-
+/* Linkovi */
 .nav-links {
   display: flex;
   gap: 1rem;
@@ -62,4 +52,37 @@
 
 .nav-link:hover {
   background-color: #ef4444;
+}
+
+/* Pozadina */
+.home-background {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+/* Overlay efekt */
+.overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Centralni tekst */
+.home-content {
+  text-align: center;
+  color: white;
+}
+
+.welcome-title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.5rem;
 }

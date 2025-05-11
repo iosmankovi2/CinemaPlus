@@ -15,12 +15,12 @@ const SeatGrid = ({ hallId }) => {
         if (Array.isArray(data)) {
           setSeats(data);
         } else {
-          console.error("Podaci nisu niz:", data);
+          console.error("Data is not an array", data);
           setSeats([]);
         }
       })
       .catch(err => {
-        console.error("Greška pri dohvaćanju sjedišta:", err);
+        console.error("Error fetching seats", err);
         setSeats([]);
       });
   }, [hallId]);
@@ -44,17 +44,17 @@ const SeatGrid = ({ hallId }) => {
       });
 
       if (response.ok) {
-        alert("Uspješna rezervacija!");
+        alert("Reservation successful!");
         setSelected([]);
         const refresh = await fetch(`http://localhost:8089/api/seats/hall/${hallId}`);
         const updated = await refresh.json();
         setSeats(updated);
       } else {
         const text = await response.text();
-        alert("Greška: " + text);
+        alert("Error: " + text);
       }
     } catch (error) {
-      alert("Došlo je do greške prilikom rezervacije.");
+      alert("An error occurred during the reservation.");
     }
   };
 
@@ -82,18 +82,18 @@ const SeatGrid = ({ hallId }) => {
 
   return (
     <div className="seat-grid-wrapper">
-      <h2>Odaberi sjedišta</h2>
-      <h3>Rezervacija za: {hallName}</h3>
-      <div className="screen">EKRAN</div>
+      <h2>Select seats</h2>
+      <h3>Reservation for: {hallName}</h3>
+      <div className="screen">SCREEN</div>
       <div className="seat-grid">{renderGrid()}</div>
 
       {selected.length > 0 && (
         <div className="summary">
           <button className="btn-reserve" onClick={handleReservation}>
-            Potvrdi rezervaciju
+            Confirm reservation
           </button>
-          <p>Odabrano: {selected.length} sjedišta</p>
-          <p>Ukupno: {selected.length * 12}.00 KM</p>
+          <p>Selected: {selected.length} seats</p>
+          <p>Total: {selected.length * 12}.00 BAM</p>
         </div>
       )}
     </div>
