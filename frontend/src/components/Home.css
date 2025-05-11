@@ -1,30 +1,24 @@
-.home-background {
+.home-container {
   height: 100vh;
   background-size: cover;
   background-position: center;
   position: relative;
-}
-
-.overlay {
-  background-color: rgba(0, 0, 0, 0.6); 
-  height: 100%;
-  width: 100%;
+  overflow: auto;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
 
-
+/* Navigacija */
 .navbar {
-  position: absolute;
+  position: fixed;
   top: 0;
   width: 100%;
   padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(0, 0, 0, 0.887);
-  z-index: 10;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 1000;
 }
 
 .logo {
@@ -45,7 +39,6 @@
   font-weight: bold;
 }
 
-
 .nav-links {
   display: flex;
   gap: 1rem;
@@ -62,4 +55,131 @@
 
 .nav-link:hover {
   background-color: #ef4444;
+}
+
+/* Overlay sadrzaj */
+.overlay {
+  margin-top: 150px; /* visina navigacije */
+  min-height: calc(100vh - 90px - 100px); /* skini navbar i footer */
+  padding: 2rem 1rem 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  flex: 1;
+}
+
+/* Tab dugmad */
+.tab-menu {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.tab-menu button {
+  padding: 0.5rem 1.2rem;
+  background-color: #d32f2f;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.tab-menu .active {
+  background-color: #f829294d;
+  color: white;
+}
+
+/* Filmovi */
+.movie-section {
+  text-align: center;
+  color: white;
+  background: none;
+}
+
+/* Container centriran i ograničen */
+.movie-grid-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  background: none;
+}
+
+/* Responsive grid layout */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  background: none;
+}
+
+/* Pojedinačne kartice */
+.movie-card {
+  background: none; 
+  text-align: center;
+  color: white;
+  transition: transform 0.2s ease;
+  background: none;
+}
+
+.movie-card:hover {
+  transform: scale(1.03);
+}
+
+.movie-poster {
+  width: 100%;
+  border-radius: 12px;
+  /*box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);*/
+}
+
+.movie-title {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+
+.details-button {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.details-button:hover {
+  background-color: #b71c1c;
+}
+
+.movie-item {
+  margin: 1.7rem 0;
+  font-size: 1.2rem;
+}
+
+/* Footer */
+.footer {
+  background-color: #111; 
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+.footer-links {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.footer-links a {
+  color: #ccc;
+  text-decoration: none;
 }

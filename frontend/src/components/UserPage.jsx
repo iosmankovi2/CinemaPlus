@@ -29,7 +29,7 @@ function UserPage() {
           <Link to="/login" className="nav-link">Login</Link>
           <Link to="/register" className="nav-link">Register</Link>
         <div className="logo">
-          🎞️ <span className="cinema-red">Cinema</span><span className="plus-white">Plus</span>
+
         </div>
           <button onClick={handleLogout} className="nav-link logout-btn">Logout</button>
         </nav>
