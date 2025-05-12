@@ -33,4 +33,18 @@ public class Seat {
 
     public Hall getHall() { return hall; }
     public void setHall(Hall hall) { this.hall = hall; }
+
+    public String getRow() {
+        return String.valueOf((char) ('A' + rowNumber - 1));
+    }
+
+    public String getNumber() {
+        return String.valueOf(seatNumber);
+    }
+
+    public String getLabel() {
+        char rowLetter = (char) ('A' + rowNumber - 1);
+        return rowLetter + String.valueOf(seatNumber); // npr. B5
+    }
+
 }

@@ -1,13 +1,17 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import SeatGrid from './SeatGrid';
 
 const HallDetails = () => {
   const { hallId } = useParams();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const projectionId = params.get("projectionId");
 
   return (
     <div>
-      <SeatGrid hallId={hallId} />
+      <h2>Select Your Seats</h2>
+      <SeatGrid hallId={hallId} projectionId={projectionId} /> {/* projectionId je sada prop */}
     </div>
   );
 };

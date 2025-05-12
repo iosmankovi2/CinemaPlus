@@ -1,7 +1,5 @@
 package com.example.cinemaplus.security;
 
-import com.example.cinemaplus.security.CustomUserDetailsService;
-import com.example.cinemaplus.security.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,43 +19,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         return path.equals("/api/users/login") || path.equals("/api/users/register");
     }
-    
 
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
-@Override
-protected void doFilterInternal(HttpServletRequest request,
-                                HttpServletResponse response,
-                                FilterChain filterChain)
-        throws ServletException, IOException {
+        String token = request.getHeader("Authorization");
 
-    String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
 
-    if (token != null && token.startsWith("Bearer ")) {
-        token = token.substring(7);
+            if (JwtTokenUtil.isValidToken(token)) {
+                String email = JwtTokenUtil.getEmailFromToken(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-        if (JwtTokenUtil.isValidToken(token)) {
-            String email = JwtTokenUtil.getEmailFromToken(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } else {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Nevalidan token");
-            return;
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Invalid token");
+                return;
+            }
         }
+
+        filterChain.doFilter(request, response);
     }
-
-    filterChain.doFilter(request, response);
-}
-
-    
 }

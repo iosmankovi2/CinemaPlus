@@ -1,42 +1,44 @@
-import React, {useContext, useState} from 'react';
+// Login.jsx
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
-import {AuthContext} from "../context/AuthContext";
+import { AuthContext } from '../context/AuthContext';
 
 export default function Login() {
-    const [user, setUser] = useState({ email: '', password: '' });
-    const navigate = useNavigate();
-    const { login } = useContext(AuthContext);
+  const [user, setUser] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
-    const handleChange = (e) =>
-        setUser({ ...user, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setUser({ ...user, [e.target.name]: e.target.value });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        try {
-            const response = await fetch('http://localhost:8089/api/users/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(user),
-            });
+    try {
+      const response = await fetch('http://localhost:8089/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user),
+      });
 
-            if (!response.ok) {
-                const text = await response.text();
-                alert('Login failed: ' + text);
-                return;
-            }
+      if (!response.ok) {
+        const text = await response.text();
+        alert('Login failed: ' + text);
+        return;
+      }
 
-            const token = await response.text();
-            login(token); // <== this updates context & localStorage
-            navigate('/user');
-        } catch (err) {
-            alert('Error: Backend not running or wrong URL.');
-            console.error(err);
-        }
-    };
+      const data = await response.json();
+      login(data.token);
+      localStorage.setItem('userId', data.userId);
+      localStorage.setItem('token', data.token);
 
-
+      navigate('/user');
+    } catch (err) {
+      alert('Error: Backend not running or wrong URL.');
+      console.error(err);
+    }
+  };
 
   return (
     <div className="login-container">

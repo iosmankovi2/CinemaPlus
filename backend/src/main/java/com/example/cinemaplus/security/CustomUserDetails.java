@@ -16,11 +16,11 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
+    // Dodjeljuje rolu korisniku (npr. ROLE_USER ili ROLE_ADMIN)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
     }
-    
 
     @Override
     public String getPassword() {
@@ -34,22 +34,22 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return true; // možeš dodati logiku ako koristiš expire datume
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return true; // isto kao gore, možeš dodati zaključavanje
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return true; // npr. za isteklu lozinku
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return true; // možeš koristiti user.getStatus().equals("ACTIVE") ako želiš
     }
 
     public User getUser() {

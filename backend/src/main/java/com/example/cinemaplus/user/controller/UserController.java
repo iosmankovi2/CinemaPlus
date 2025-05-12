@@ -18,7 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -47,22 +51,29 @@ public ResponseEntity<List<User>> getAllUsers() {
         }
     }
 
- @PostMapping("/login")
- public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-     System.out.println("Pokušaj logina: " + loginRequest.getEmail());
- 
-     // Provjera korisnika
-     User user = userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
-     if (user != null) {
-         System.out.println("User pronađen: " + user.getEmail());
-         String token = JwtTokenUtil.generateJwtToken(user);
-         return ResponseEntity.ok(token); // Vraćanje tokena
-     } else {
-         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neispravni podaci za prijavu");
-     }
- }
-    
-    
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        System.out.println("Pokušaj logina: " + loginRequest.getEmail());
+
+        User user = userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
+
+        if (user != null) {
+            System.out.println("User pronađen: " + user.getEmail());
+            String token = JwtTokenUtil.generateJwtToken(user);
+
+            // 🔁 JSON odgovor koji frontend očekuje
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("userId", user.getId());
+
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neispravni podaci za prijavu");
+        }
+    }
+
+
+
     @GetMapping("/me")
 public ResponseEntity<User> getLoggedInUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
     return ResponseEntity.ok(userDetails.getUser());
