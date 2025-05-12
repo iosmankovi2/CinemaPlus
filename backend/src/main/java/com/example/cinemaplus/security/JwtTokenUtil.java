@@ -1,50 +1,42 @@
+
 package com.example.cinemaplus.security;
 
-import io.jsonwebtoken.JwtException; // Dodajte ovaj import
-import javax.crypto.SecretKey;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import com.example.cinemaplus.user.model.User;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.SignatureAlgorithm;
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 public class JwtTokenUtil {
 
-
-
-private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final String SECRET = "tajni_kljuc_koji_je_dug_bar_32_znaka_treba_biti";
+    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
+    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10;
 
     public static String generateJwtToken(User user) {
         return Jwts.builder()
-                .setSubject(user.getEmail()) // Korisničko ime je subject
-                .setIssuedAt(new Date()) // Datum kada je token izdat
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // Token važi 10 sati
-                .signWith(SECRET_KEY) // Potpisivanje tokena
-                .compact(); // Kompaktan oblik tokena
+                .setSubject(user.getEmail())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SECRET_KEY)
+                .compact();
     }
 
-   // JwtTokenUtil.java
-
-public static String getEmailFromToken(String token) {
-    // Izvucite email iz tokena koristeći JWT library
-    // Pretpostavljam da koristite JWT, pa možete koristiti getClaim
-    return Jwts.parser().setSigningKey(SECRET_KEY)
+    public static String getEmailFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject(); // Pretpostavljamo da je email postavljen kao subject u tokenu
-}
-
-// JwtTokenUtil.java
-
-public static boolean isValidToken(String token) {
-    try {
-        Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
-        return true; // Token je validan
-    } catch (JwtException | IllegalArgumentException e) {
-        return false; // Token nije validan
+                .getSubject();
     }
-}
 
+    public static boolean isValidToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
 }

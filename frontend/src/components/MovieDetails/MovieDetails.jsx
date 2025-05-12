@@ -8,6 +8,7 @@ const MovieDetails = () => {
   const [showTrailer, setShowTrailer] = useState(false);
   const [selectedDay, setSelectedDay] = useState('today');
   const [projections, setProjections] = useState([]);
+  const [selectedProjection, setSelectedProjection] = useState(null);
 
   useEffect(() => {
     fetch(`/api/movies/${id}`)
@@ -23,19 +24,39 @@ const MovieDetails = () => {
     return newDate;
   };
 
-  useEffect(() => {
-    if (!movie || !movie.currentlyShowing) return;
-    const date = getDateForDay(selectedDay).toISOString().split('T')[0];
-    fetch(`/api/projections/by-date?movieId=${id}&date=${date}`)
+useEffect(() => {
+  if (!movie || !movie.currentlyShowing) return;
+  const date = getDateForDay(selectedDay).toISOString().split('T')[0];
+  fetch(`/api/projections/by-date?movieId=${id}&date=${date}`)
     .then(res => res.json())
-      .then(data => setProjections(data));
-  }, [selectedDay, movie]);
+    .then(data => {
+      console.log("Fetched projections:", data); // <== OVO DODAJ
+      setProjections(data);
+    });
+}, [selectedDay, movie]);
+
+
 
   const formatType = (type) => {
     if (type === 'TWO_D') return '2D';
     if (type === 'THREE_D') return '3D';
     if (type === 'FOUR_DX') return '4DX';
     return type;
+  };
+
+  const handleBookTickets = () => {
+    if (!selectedProjection) {
+      alert("Please select a screening time first.");
+      return;
+    }
+
+    if (!selectedProjection.hallId) {
+      alert("Hall ID is missing for this projection.");
+      return;
+    }
+
+    // Redirekcija na izbor sjedišta
+    window.location.href = `/sale/${selectedProjection.hallId}?projectionId=${selectedProjection.id}`;
   };
 
   if (!movie) return <p>Loading...</p>;
@@ -65,40 +86,29 @@ const MovieDetails = () => {
           <p className="movie-section-title">Cast</p>
           <p>{movie.movieCast}</p>
 
-          {/* Prikaži screenings samo ako je currentlyShowing */}
           {movie.currentlyShowing ? (
             <>
               <p className="movie-section-title">Screenings</p>
               <div className="screening-buttons">
-                <button
-                  className={selectedDay === 'today' ? 'active' : ''}
-                  onClick={() => setSelectedDay('today')}
-                >
-                  Today
-                </button>
-                <button
-                  className={selectedDay === 'tomorrow' ? 'active' : ''}
-                  onClick={() => setSelectedDay('tomorrow')}
-                >
-                  Tomorrow
-                </button>
-                <button
-                  className={selectedDay === 'after' ? 'active' : ''}
-                  onClick={() => setSelectedDay('after')}
-                >
-                  Day After
-                </button>
+                <button className={selectedDay === 'today' ? 'active' : ''} onClick={() => setSelectedDay('today')}>Today</button>
+                <button className={selectedDay === 'tomorrow' ? 'active' : ''} onClick={() => setSelectedDay('tomorrow')}>Tomorrow</button>
+                <button className={selectedDay === 'after' ? 'active' : ''} onClick={() => setSelectedDay('after')}>Day After</button>
               </div>
 
               <div className="time-buttons">
                 {projections.length > 0 ? (
                   projections.map((p) => (
-                    <button key={p.id}>
-                      {new Date(p.startTime).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })} ({formatType(p.projectionType)})
-                    </button>
+                  <button
+                    key={p.id}
+                    onClick={() => {
+                      setSelectedProjection(p);
+                      localStorage.setItem("selectedProjection", JSON.stringify(p)); // za kasnije
+                    }}
+                    className={selectedProjection?.id === p.id ? 'active' : ''}
+                  >
+                    {new Date(p.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ({formatType(p.projectionType)})
+                  </button>
+
                   ))
                 ) : (
                   <p style={{ color: '#aaa' }}>No screenings available for selected day.</p>
@@ -115,9 +125,8 @@ const MovieDetails = () => {
             <button onClick={() => setShowTrailer(!showTrailer)}>
               🎬 {showTrailer ? 'Hide Trailer' : 'Watch Trailer'}
             </button>
-            {/* Book Tickets samo ako prikazujemo */}
             {movie.currentlyShowing && (
-              <button>🎟️ Book Tickets</button>
+              <button onClick={handleBookTickets}>🎟️ Book Tickets</button>
             )}
           </div>
 

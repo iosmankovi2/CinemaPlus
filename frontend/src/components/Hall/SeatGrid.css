@@ -1,20 +1,30 @@
 .seat-grid-wrapper {
-  background-color: #000;
-  color: white;
+  position: relative;
   padding: 30px;
-  text-align: center;
   min-height: 100vh;
+  text-align: center;
+  color: white;
   background-image: url('../../assets/popcorn-cinema.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  z-index: 1;
+}
+
+.seat-grid-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* tamni sloj */
+  z-index: -1;
 }
 
 h3 {
-margin-top: 0;
-margin-bottom: 20px;
-front-size: 20px;
-color: white;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: white;
+  text-shadow: 1px 1px 3px black;
 }
 
 .screen {
@@ -27,6 +37,8 @@ color: white;
   margin-left: auto;
   margin-right: auto;
   border-radius: 5px;
+  font-size: 18px;
+  text-shadow: 1px 1px 2px black;
 }
 
 .seat-grid {
@@ -42,8 +54,8 @@ color: white;
 }
 
 .seat {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   background-color: #ccc;
   color: black;
   display: flex;
@@ -51,11 +63,14 @@ color: white;
   justify-content: center;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
 .seat.taken {
-  background-color: #444;
+  background-color: #555;
+  color: #aaa;
   cursor: not-allowed;
 }
 
@@ -66,20 +81,36 @@ color: white;
 
 .summary {
   margin-top: 20px;
-  font-size: 16px;
+  font-size: 18px;
+  text-shadow: 1px 1px 2px black;
 }
-
 
 .btn-reserve {
   margin-top: 10px;
-  padding: 8px 16px;
+  padding: 10px 20px;
   background-color: #c0392b;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
+  font-size: 16px;
   cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .btn-reserve:hover {
   background-color: #e74c3c;
+}
+.ticket-preview {
+  margin-top: 30px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 20px;
+  border: 1px dashed white;
+  width: 320px;
+  margin: 30px auto;
+  border-radius: 12px;
+}
+
+.ticket-preview .ticket p {
+  margin: 6px 0;
 }

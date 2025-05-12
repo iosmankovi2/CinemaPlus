@@ -1,0 +1,46 @@
+.my-tickets-container {
+  padding: 2rem;
+  color: white;
+}
+
+.red {
+  color: red;
+}
+
+.ticket-tabs button {
+  padding: 0.5rem 1.5rem;
+  margin-right: 1rem;
+  background: #111;
+  color: white;
+  border: 1px solid red;
+  border-radius: 5px;
+}
+
+.ticket-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.ticket-card {
+  background: #1a1a1a;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #333;
+  width: 300px;
+}
+
+.price {
+  color: red;
+  font-weight: bold;
+}
+
+.ticket-actions button {
+  margin-right: 10px;
+  padding: 0.4rem 1rem;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}

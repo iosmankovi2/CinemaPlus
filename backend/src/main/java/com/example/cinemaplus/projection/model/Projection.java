@@ -7,6 +7,7 @@ import com.example.cinemaplus.movie.model.Movie;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.example.cinemaplus.projection.model.ProjectionType;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,6 +27,7 @@ public class Projection {
     private Movie movie;
 
     @ManyToOne(optional = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Hall hall;
 
     private LocalDateTime startTime;

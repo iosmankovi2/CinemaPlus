@@ -9,16 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.cinemaplus.hall.model.model.Hall;
 import com.example.cinemaplus.hall.model.repository.HallRepository;
@@ -33,7 +24,8 @@ import com.example.cinemaplus.projection.repository.ProjectionRepository;
 @RequestMapping("/api/projections")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ProjectionsController {
-     @Autowired
+
+    @Autowired
     private MovieRepository movieRepository;
 
     @Autowired
@@ -47,122 +39,96 @@ public class ProjectionsController {
 
     @GetMapping("/by-date")
     public List<ProjectionsDTO> getProjectionsByMovieAndDate(
-        @RequestParam Long movieId,
-        @RequestParam String date) {
+            @RequestParam Long movieId,
+            @RequestParam String date) {
 
         LocalDate localDate = LocalDate.parse(date);
         LocalDateTime start = localDate.atStartOfDay();
         LocalDateTime end = localDate.plusDays(1).atStartOfDay();
 
-        List<Projection> projections = projectionRepository.findByMovieIdAndStartTimeBetween(movieId, start, end);
-
-        return (List<ProjectionsDTO>) projections.stream()
-                .map(p -> new ProjectionsDTO(
-                        p.getId(),
-                        p.getStartTime(),
-                        p.getProjectionType(),
-                        p.getTicketPrice(),
-                        p.getMovie().getTitle(),     
-                        p.getHall().getName()))
+        return projectionRepository.findByMovieIdAndStartTimeBetween(movieId, start, end)
+                .stream()
+                .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
+
     @GetMapping("/all")
     public List<ProjectionsDTO> getAllProjections() {
-        return projectionRepository.findAll().stream()
-        .map(p -> new ProjectionsDTO(
-                p.getId(),
-                p.getStartTime(),
-                p.getProjectionType(),
-                p.getTicketPrice(),
-                p.getMovie().getTitle(),     
-                p.getHall().getName()))
-        .collect(Collectors.toList());
-}
+        return projectionRepository.findAll()
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProjection(@PathVariable Long id) {
         if (!projectionRepository.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Projection not found");
         }
-
         projectionRepository.deleteById(id);
         return ResponseEntity.ok("Projection deleted successfully");
     }
 
     @PostMapping
-    public ResponseEntity<?> addProjection(@RequestBody ProjectionsCreateDTO dto) {
-        Projection p = new Projection();
-        p.setStartTime(dto.getStartTime());
-        p.setProjectionType(dto.getProjectionType());
-        p.setTicketPrice(dto.getTicketPrice());
-    
-       Optional<Movie> movie = movieRepository.findById(dto.getMovieId());
-        if (movie.isEmpty()) {
-            throw new RuntimeException("Movie not found");
-        }
-        p.setMovie(movie.get());
-        p.setHall(
-            hallRepository.findById(dto.getHallId())
-                .orElseThrow(new java.util.function.Supplier<RuntimeException>() {
-                    @Override
-                    public RuntimeException get() {
-                        return new RuntimeException("Hall not found");
-                    }
-                })
-        );
-    
-        projectionRepository.save(p);
-        ProjectionsDTO responseDto = new ProjectionsDTO(
-            p.getId(),
-            p.getStartTime(),
-            p.getProjectionType(),
-            p.getTicketPrice(),
-            p.getMovie().getTitle(),
-            p.getHall().getName()
-        );
-    
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-    }
-        @PutMapping("/{id}")
-        public ResponseEntity<?> updateProjection(@PathVariable Long id, @RequestBody ProjectionsCreateDTO dto) {
-        if (dto.getMovieId() == null || dto.getHallId() == null) {
-            return ResponseEntity.badRequest().body("Movie ID and Hall ID must be provided.");
-        }
+    public ResponseEntity<ProjectionsDTO> addProjection(@RequestBody ProjectionsCreateDTO dto) {
+        Projection projection = new Projection();
+        projection.setStartTime(dto.getStartTime());
+        projection.setProjectionType(dto.getProjectionType());
+        projection.setTicketPrice(dto.getTicketPrice());
 
+        Movie movie = movieRepository.findById(dto.getMovieId())
+                .orElseThrow(() -> new RuntimeException("Movie not found"));
+        projection.setMovie(movie);
+
+        Hall hall = hallRepository.findById(dto.getHallId())
+                .orElseThrow(() -> new RuntimeException("Hall not found"));
+        projection.setHall(hall);
+
+        projectionRepository.save(projection);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapToDTO(projection));
+    }
+    @Autowired
+    private com.example.cinemaplus.projection.init.ProjectionDataLoader projectionDataLoader;
+
+    @GetMapping("/debug-load-projections")
+    public ResponseEntity<String> manuallyTriggerProjectionLoading() {
+        projectionDataLoader.loadProjections();
+        return ResponseEntity.ok("✅ Projekcije su pokušane dodati.");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProjection(@PathVariable Long id, @RequestBody ProjectionsCreateDTO dto) {
         Optional<Projection> optionalProjection = projectionRepository.findById(id);
-        if (!optionalProjection.isPresent()) {
+        if (optionalProjection.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Projection not found");
         }
 
-        Optional<Hall> optionalHall = hallRepository.findById(dto.getHallId());
-        if (!optionalHall.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hall not found");
-        }
-
-        Optional<Movie> movie = movieRepository.findById(dto.getMovieId());
-        if (movie.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Movie not found");
-        }
+        Movie movie = movieRepository.findById(dto.getMovieId())
+                .orElseThrow(() -> new RuntimeException("Movie not found"));
+        Hall hall = hallRepository.findById(dto.getHallId())
+                .orElseThrow(() -> new RuntimeException("Hall not found"));
 
         Projection existing = optionalProjection.get();
         existing.setStartTime(dto.getStartTime());
         existing.setProjectionType(dto.getProjectionType());
         existing.setTicketPrice(dto.getTicketPrice());
-        existing.setMovie(movie.get());
-        existing.setHall(optionalHall.get());
+        existing.setMovie(movie);
+        existing.setHall(hall);
 
         projectionRepository.save(existing);
-
-        ProjectionsDTO responseDto = new ProjectionsDTO(
-        existing.getId(),
-        existing.getStartTime(),
-        existing.getProjectionType(),
-        existing.getTicketPrice(),
-        movie.get().getTitle(),
-        optionalHall.get().getName()
-    );
-
-    return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(mapToDTO(existing));
     }
 
-
+    // 📦 Pomoćna metoda za mapiranje entiteta u DTO
+    private ProjectionsDTO mapToDTO(Projection p) {
+        return new ProjectionsDTO(
+                p.getId(),
+                p.getStartTime(),
+                p.getProjectionType(),
+                p.getTicketPrice(),
+                p.getMovie().getTitle(),
+                p.getHall().getName(),
+                p.getHall().getId()
+        );
+    }
 }
