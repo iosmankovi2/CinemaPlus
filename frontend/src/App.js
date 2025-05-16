@@ -5,8 +5,6 @@ import Home from './components/Home';
 import Layout from './components/Layout';
 import Register from './components/Register';
 import Login from './components/Login';
-import UserPage from './components/UserPage';
-import PrivateRoute from './components/PrivateRoute';
 import Sale from './components/Hall/Hall';
 import HallDetails from './components/Hall/HallDetails';
 import MovieSection from './components/MovieSection/MovieSection';
@@ -14,7 +12,7 @@ import MovieDetails from './components/MovieDetails/MovieDetails';
 import UserTable from './components/UserTable/UserTable';
 import ScreeningsPage from './components/ScreeningPage/ScreeningPage';
 import AdminDashboard from './components/AdminDashBoard/AdminDashboard';
-
+import Profile from './components/Profile'; // Importuj Profile komponentu
 
 function App() {
   return (
@@ -25,7 +23,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
-          <Route path="user" element={<PrivateRoute element={<UserPage />} />} />
+           <Route path="/user" element={<Profile />} /> 
           <Route path="sale" element={<Sale />} />
           <Route path="sale/:hallId" element={<HallDetails />} />
           <Route path="movies" element={<MovieSection />} />
