@@ -1,6 +1,7 @@
 package com.example.cinemaplus.user.service;
 
 import com.example.cinemaplus.reservation.model.Reservation;
+import com.example.cinemaplus.reservation.repository.ReservationRepository;
 import com.example.cinemaplus.user.dto.UpdateUserDTO;
 import com.example.cinemaplus.user.dto.UserDTO;
 import com.example.cinemaplus.user.model.Role;
@@ -13,7 +14,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +26,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+     @Autowired
+    private ReservationRepository reservationRepository;
 
     @Transactional
     public void registerUser(UserDTO userDTO) {
@@ -86,6 +89,12 @@ public class UserService {
             return null;
         }
     }
+
+     public User getUserById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        return userOptional.orElse(null); // Vraća korisnika ako postoji, inače null
+     }
+     
     @Transactional
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
@@ -120,26 +129,18 @@ public class UserService {
         }
     }
 
-    @Transactional
-public void updateUser(Long id, UpdateUserDTO userDTO) {
-    validateUpdateDTO(userDTO);
-
-    User user = userRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("User not found."));
-
-    user.setFirstName(userDTO.getFirstName());
-    user.setLastName(userDTO.getLastName());
-    user.setEmail(userDTO.getEmail());
-
-    if (userDTO.getPassword() != null && !userDTO.getPassword().isBlank()) {
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+   public User updateUser(Long id, UpdateUserDTO updatedUserDTO) {
+        Optional<User> existingUserOptional = userRepository.findById(id);
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+            existingUser.setFirstName(updatedUserDTO.getFirstName());
+            existingUser.setLastName(updatedUserDTO.getLastName());
+            existingUser.setEmail(updatedUserDTO.getEmail());
+            return userRepository.save(existingUser); // Sada vraćamo spremljenog korisnika
+        } else {
+            throw new RuntimeException("User not found with ID: " + id);
+        }
     }
-
-    user.setRole(userDTO.getRole() != null ? userDTO.getRole() : Role.User);
-    user.setUserStatus(userDTO.getUserStatus() != null ? userDTO.getUserStatus() : UserStatus.ACTIVE);
-
-    userRepository.save(user);
-}
 
 private void validateUpdateDTO(UpdateUserDTO dto) {
     if (dto.getFirstName() == null || dto.getFirstName().isBlank()) {
@@ -152,5 +153,24 @@ private void validateUpdateDTO(UpdateUserDTO dto) {
         throw new IllegalArgumentException("Email is required.");
     }
 }
+
+public void updatePassword(Long id, String oldPassword, String newPassword) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("User not found with ID: " + id);
+        }
+        User user = userOptional.get();
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Incorrect old password");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+public List<Reservation> getUserReservations(Long userId) {
+        return reservationRepository.findByUserId(userId);
+    }
 
 }
