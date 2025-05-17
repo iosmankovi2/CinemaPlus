@@ -51,10 +51,13 @@ const UserTable = () => {
 };
 
 const handleSaveEdit = (id, updatedData) => {
-  fetch(`/api/users/${id}`, {
+  const token = localStorage.getItem("token"); 
+
+  fetch(`/api/users/admin/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`  
     },
     body: JSON.stringify(updatedData),
   })
@@ -71,9 +74,15 @@ const handleSaveEdit = (id, updatedData) => {
     });
 };
 
+
   const confirmDelete = (id) => {
+    const token = localStorage.getItem("token"); 
     fetch(`/api/users/${id}`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`  
+      },
     })
       .then((res) => {
         console.log("API response:", res); 

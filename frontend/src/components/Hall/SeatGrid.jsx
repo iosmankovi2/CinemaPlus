@@ -59,9 +59,10 @@ const SeatGrid = ({ hallId }) => {
       if (response.ok) {
         alert("Reservation successful!");
         setShowPreview(true);
-        setSelected([]);
+        setShowPreview(true);
         const updated = await fetch(`http://localhost:8089/api/seats/hall/${hallId}`).then(r => r.json());
         setSeats(updated);
+
       } else {
         const text = await response.text();
         alert("Error: " + text);
@@ -114,7 +115,7 @@ const SeatGrid = ({ hallId }) => {
           <select value={ticketType} onChange={e => setTicketType(e.target.value)}>
             <option value="E_TICKET">Download PDF</option>
             <option value="EMAIL_TICKET">Email</option>
-            <option value="PHYSICAL_PICKUP">Pick up</option>
+            <option value="PHYSICAL_TICKET">Pick up</option>
           </select>
           <button onClick={handleReservation} className="btn-reserve">Confirm reservation</button>
           <p>Selected: {selected.length} seats</p>

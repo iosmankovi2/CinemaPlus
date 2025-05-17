@@ -32,6 +32,7 @@ function App() {
           <Route path="admin/users" element={<UserTable />} />
           <Route path="admin/screenings" element={<ScreeningsPage/>} />
           <Route path="admin/dashboard" element={<AdminDashboard/>} />
+          <Route path="users/admin/:id" element={<UserTable/>} />
           </Route>
       </Routes>
     </Router>
