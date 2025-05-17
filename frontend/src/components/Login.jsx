@@ -29,11 +29,15 @@ export default function Login() {
       }
 
       const data = await response.json();
-      login(data.token);
+      login(data.token, data.role);
       localStorage.setItem('userId', data.userId);
-      localStorage.setItem('token', data.token);
 
-      navigate('/user');
+      console.log(data.role);
+      if (data.role === 'Admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/user');
+      }
     } catch (err) {
       alert('Error: Backend not running or wrong URL.');
       console.error(err);

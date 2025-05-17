@@ -80,6 +80,7 @@ public ResponseEntity<User> getUserById(@PathVariable Long id, @AuthenticationPr
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("userId", user.getId());
+            response.put("role", user.getRole());
 
             return ResponseEntity.ok(response);
         } else {

@@ -3,6 +3,7 @@ import "./ScreeningPage.css";
 import ConfirmDeleteModal from "../ConfirmDeleteProjectionModal/ConfirmDeleteProjectionModal";
 import AddScreeningModal from "../AddScreeningsModal/AddScreeningsModal";
 import EditScreeningModal from "../EditScreeningModal/EditScreeningModal";
+import AdminLayout from "../AdminLayout";
 const ScreeningsPage = () => {
   const [screenings, setScreenings] = useState([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -58,6 +59,7 @@ const handleCancel = (id) => {
       };
        
   return (
+      <AdminLayout>
     <div className="screenings-container">
       <div className="screenings-header">
         <h2>Screenings</h2>
@@ -171,6 +173,7 @@ const handleCancel = (id) => {
         />
 
             </div>
+      </AdminLayout>
           );
           
         };

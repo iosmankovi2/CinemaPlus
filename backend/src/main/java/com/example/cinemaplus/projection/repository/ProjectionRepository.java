@@ -12,5 +12,7 @@ import com.example.cinemaplus.projection.model.Projection;
 public interface ProjectionRepository extends JpaRepository<Projection, Long> {
 
     List<Projection> findByMovieIdAndStartTimeBetween(Long movieId, LocalDateTime start, LocalDateTime end);
+    void deleteByMovieId(Long movieId);
+
 
 }
