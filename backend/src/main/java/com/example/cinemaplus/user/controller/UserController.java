@@ -147,6 +147,7 @@ public ResponseEntity<List<Reservation>> getUserReservations(@PathVariable Long 
 
     // Brisanje korisnika
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
@@ -161,4 +162,20 @@ public ResponseEntity<List<Reservation>> getUserReservations(@PathVariable Long 
         return (long) userService.getAllUsers().size();
     
     }
+    @PutMapping("/admin/{id}")
+    @PreAuthorize("hasRole('Admin')")
+    public ResponseEntity<?> adminUpdateUser(@PathVariable Long id,
+                                         @Valid @RequestBody UpdateUserDTO updatedUserDTO,
+                                         BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+        return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+    }
+    try {
+        User updatedUser = userService.updateUser(id, updatedUserDTO);
+        return ResponseEntity.ok(updatedUser);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user: " + e.getMessage());
+    }
+}
+
 }

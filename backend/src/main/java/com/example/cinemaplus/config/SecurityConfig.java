@@ -42,8 +42,11 @@ public class SecurityConfig {
                                 "/api/seats/**",
                                 "/api/movies/**",
                                 "/api/tickets",
-                                "/api/users/me"
-                        ).permitAll()
+                                "/api/users/me",
+                                "/api/projections/*",
+                                "/api/users/*",
+                                "/api/admin/*"
+                                ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
