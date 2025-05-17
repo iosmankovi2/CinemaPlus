@@ -12,7 +12,10 @@ import MovieDetails from './components/MovieDetails/MovieDetails';
 import UserTable from './components/UserTable/UserTable';
 import ScreeningsPage from './components/ScreeningPage/ScreeningPage';
 import AdminDashboard from './components/AdminDashBoard/AdminDashboard';
-import Profile from './components/Profile'; // Importuj Profile komponentu
+import Profile from './components/Profile';
+import RoleRoute from "./RoleRoute";
+import AdminMovieManagement from "./components/AdminMovieSection/AdminMovieManagement";
+import AdminLayout from "./components/AdminLayout";
 
 function App() {
   return (
@@ -29,11 +32,15 @@ function App() {
           <Route path="movies" element={<MovieSection />} />
           <Route path="movies/:id" element={<MovieDetails />} />
           <Route path="projections" element={<MovieDetails />} />
-          <Route path="admin/users" element={<UserTable />} />
-          <Route path="admin/screenings" element={<ScreeningsPage/>} />
-          <Route path="admin/dashboard" element={<AdminDashboard/>} />
-          <Route path="users/admin/:id" element={<UserTable/>} />
+
+            <Route path="users/admin/:id" element={<UserTable/>} />
           </Route>
+
+        {/* Admin Routes */}
+        <Route path="admin/dashboard" element={<RoleRoute requiredRole="Admin" element={<AdminDashboard />} />} />
+        <Route path="admin/screenings" element={<RoleRoute requiredRole="Admin" element={<ScreeningsPage />} />} />
+        <Route path="admin/users" element={<RoleRoute requiredRole="Admin" element={<UserTable />} />} />
+        <Route path="admin/movies" element={<RoleRoute requiredRole="Admin" element={<AdminMovieManagement />} />} />
       </Routes>
     </Router>
   );

@@ -6,6 +6,7 @@ import ConfirmDeleteModal from "../ConfirmDeleteModal/ConfirmDeleteModal";
 import EditUserModal from "../EditUserModal/EditUserModal";
 import AddUserModal from "../AddUserModal/AddUserModal";
 import { FaUserPlus} from "react-icons/fa";
+import AdminLayout from "../AdminLayout";
 
 
 const UserTable = () => {
@@ -120,6 +121,7 @@ const handleSaveEdit = (id, updatedData) => {
   
   
   return (
+      <AdminLayout>
     <div className="user-header">
     <div className="user-header-top">
       <h2 className="user-page-title">User Management</h2>
@@ -173,6 +175,7 @@ const handleSaveEdit = (id, updatedData) => {
 />
     </div>
     </div>
+      </AdminLayout>
   );
   
 };

@@ -118,4 +118,20 @@
     border-color: #ff3b3f;
     outline: none;
   }
+
+.add-movie-btn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.add-movie-btn:hover {
+  background-color: #dc2626;
+}
+
   
