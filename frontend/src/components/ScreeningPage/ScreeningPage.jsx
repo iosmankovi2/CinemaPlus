@@ -60,17 +60,14 @@ const handleCancel = (id) => {
        
   return (
       <AdminLayout>
-    <div className="screenings-container">
-      <div className="screenings-header">
-        <h2>Screenings</h2>
+        <h2 className="screen-page-title">Screenings</h2>
         <button className="add-screening-btn" onClick={() => setShowAddModal(true)}>
   + Add Screening
 </button>
-      </div>
 
       <div className="screenings-card">
         <h3>Upcoming Screenings</h3>
-        <p className="subtitle">Manage all upcoming movie screenings</p>
+        <p className="subtitle_screen">Manage all upcoming movie screenings</p>
         <table className="screenings-table">
           <thead>
             <tr>
@@ -99,7 +96,7 @@ const handleCancel = (id) => {
                   <td>{p.hallName}</td>
                   <td>
                     <button className="edit-btn" onClick={() => handleEdit(p.id)}>✏️ Edit</button>
-                    <button className="cancel-btn" onClick={() => handleCancel(p.id)}>🗑 Cancel</button>
+                    <button className="cancel-btn-sc" onClick={() => handleCancel(p.id)}>🗑 Cancel</button>
                   </td>
                 </tr>
               );
@@ -171,8 +168,6 @@ const handleCancel = (id) => {
             }}
             
         />
-
-            </div>
       </AdminLayout>
           );
           

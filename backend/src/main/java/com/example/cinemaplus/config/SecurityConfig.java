@@ -5,6 +5,7 @@ import com.example.cinemaplus.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -43,10 +44,13 @@ public class SecurityConfig {
                                 "/api/movies/**",
                                 "/api/tickets",
                                 "/api/users/me",
-                                "/api/projections/*",
+                                "/api/projections/**",
                                 "/api/users/*",
-                                "/api/admin/*"
+                                "/api/admin/*",
+                                "/api/reservations/user/*",
+                                "/api/reviews/movie/**"
                                 ).permitAll()
+                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -1,14 +1,9 @@
 /* === PAGE HEADER === */
-.user-header {
-  width: 100vw;
-  background-color: #121212;
-  padding: 32px 5%;
-  margin: 0 auto 24px auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid #2c2c2c;
+body, html {
+  overflow-x: hidden;
 }
 
-.user-header .user-page-title {
+.user-page-title {
   color: #ef4444;
   font-size: 36px;
   font-weight: 800;
@@ -22,6 +17,9 @@
   color: #aaa;
   margin-bottom: 20px;
 }
+.subtitle_user {
+  text-align: left;
+}
 
 /* === TABLE WRAPPER === */
 .table-container {
@@ -30,9 +28,9 @@
   padding: 24px;
   margin: 40px auto;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.03);
-  width: 95%;
-  max-width: 1200px;
   color: white;
+  width: 70%;
+  overflow-x: auto;
 }
 
 /* === FILTERS SECTION === */
@@ -46,9 +44,10 @@
 /* === TABLE === */
 table {
   width: 100%;
-  border-collapse: separate;
+  border-collapse: collapse;
   border-spacing: 0;
   margin-top: 16px;
+  table-layout: auto;
 }
 
 th,
@@ -58,6 +57,10 @@ td {
   text-align: left;
   color: #e4e4e7;
   font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
 th {
@@ -87,44 +90,37 @@ tbody tr td:last-child {
   border-bottom-right-radius: 12px;
 }
 
+/* === ACTIONS CELL (zadnja kolona) === */
+.actions-cell {
+  padding-right: 64px; 
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  
+}
+
 /* === ACTION BUTTONS === */
 .edit-btn {
-  background-color: #3b82f6;
-  color: white;
-  padding: 6px 12px;
+  padding: 6px 8px;
+  font-size: 13px;
+  white-space: nowrap;
   border-radius: 8px;
   font-weight: 600;
   border: none;
-  margin-right: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 0 6px rgba(59, 130, 246, 0.4);
 }
 
+.edit-btn {
+  background-color: #3b82f6;
+  color: white;
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.4);
+}
 .edit-btn:hover {
   background-color: #60a5fa;
   transform: scale(1.05);
   box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
 }
-
-.delete-btn {
-  background-color: #ef4444;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
-}
-
-.delete-btn:hover {
-  background-color: #f87171;
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
-}
-
 .add-user-btn {
   background: linear-gradient(90deg, #ef4444, #f43f5e);
   color: white;
@@ -137,10 +133,9 @@ tbody tr td:last-child {
   cursor: pointer;
   transition: all 0.3s ease;
   justify-content: space-between;
-
 }
-
 .add-user-btn:hover {
   transform: scale(1.04);
   box-shadow: 0 0 18px rgba(239, 68, 68, 0.8);
 }
+

@@ -1,13 +1,14 @@
 package com.example.cinemaplus.movie.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.cinemaplus.review.model.Review;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -35,12 +36,14 @@ public class Movie {
     private int releaseYear;
 
     private boolean currentlyShowing;
-    
-    @Getter
+
     private String trailerUrl;
-    
+
     private String imageUrl;
 
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Review> reviews;
 
     public Movie(String title, String description, int durationInMinutes, String genre,
                  String director, String movieCast, int releaseYear, boolean currentlyShowing,
@@ -56,14 +59,4 @@ public class Movie {
         this.trailerUrl = trailerUrl;
         this.imageUrl = imageUrl;
     }
-
-//    public String getTitle() {
-  //      return title;
-   // }
-
-    //public void setTitle(String title) {
-      //  this.title = title;
-    //}
-
-
 }

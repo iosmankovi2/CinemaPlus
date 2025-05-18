@@ -32,8 +32,8 @@ function App() {
           <Route path="movies" element={<MovieSection />} />
           <Route path="movies/:id" element={<MovieDetails />} />
           <Route path="projections" element={<MovieDetails />} />
-
-            <Route path="users/admin/:id" element={<UserTable/>} />
+          <Route path="users/admin/:id" element={<UserTable/>} />
+          <Route path="reviews" element={<MovieDetails />} />
           </Route>
 
         {/* Admin Routes */}

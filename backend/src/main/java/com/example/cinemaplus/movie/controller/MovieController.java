@@ -1,6 +1,7 @@
 package com.example.cinemaplus.movie.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +9,10 @@ import org.springframework.http.HttpStatus;
 
 import com.example.cinemaplus.movie.model.Movie;
 import com.example.cinemaplus.movie.service.MovieService;
+
 import java.util.Optional;
+
+import com.example.cinemaplus.movie.repository.MovieRepository;
 @RestController
 @RequestMapping("/api/movies")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -68,7 +72,7 @@ public class MovieController {
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
         boolean deleted = movieService.deleteMovieById(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
-    }
-
+    
+}
 }
 

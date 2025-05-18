@@ -1,6 +1,9 @@
 .user-row {
   border-bottom: 1px solid #2c2c2c;
 }
+body, html {
+  overflow-x: hidden;
+}
 
 .user-name {
   font-weight: bold;
@@ -66,7 +69,7 @@
 
 /* DUGMAD */
 .edit-btn,
-.delete-btn {
+.delete-btn-ur {
   padding: 6px 14px;
   border-radius: 8px;
   font-size: 12px;
@@ -77,6 +80,7 @@
   text-align: center;
   transition: background 0.2s ease, transform 0.2s ease;
 }
+
 
 .edit-btn {
   background-color: #3b82f6;
@@ -89,12 +93,14 @@
   transform: scale(1.05);
 }
 
-.delete-btn {
+.delete-btn-ur {
   background-color: #ef4444;
   color: white;
+  height: 29.6px;
+  width: 70.3px;
 }
 
-.delete-btn:hover {
+.delete-btn-ur:hover {
   background-color: #f87171;
   transform: scale(1.05);
 }
