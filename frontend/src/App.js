@@ -16,7 +16,9 @@ import Profile from './components/Profile';
 import RoleRoute from "./RoleRoute";
 import AdminMovieManagement from "./components/AdminMovieSection/AdminMovieManagement";
 import AdminLayout from "./components/AdminLayout";
-
+import PaymentPage from './components/Payment/Payment';
+import Success from './components/Payment/Success'
+import Failed from './components/Payment/Failed'
 function App() {
   return (
     <Router>
@@ -34,6 +36,10 @@ function App() {
           <Route path="projections" element={<MovieDetails />} />
           <Route path="users/admin/:id" element={<UserTable/>} />
           <Route path="reviews" element={<MovieDetails />} />
+          <Route path="payment" element={<PaymentPage />} />
+          <Route path="success" element={<Success/>} />
+          <Route path="failed" element={<Failed/>} />
+
           </Route>
 
         {/* Admin Routes */}

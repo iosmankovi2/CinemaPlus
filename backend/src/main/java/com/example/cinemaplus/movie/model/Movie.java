@@ -41,7 +41,7 @@ public class Movie {
 
     private String imageUrl;
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Review> reviews;
 

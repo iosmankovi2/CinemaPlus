@@ -1,0 +1,53 @@
+.result-container {
+  min-height: 100vh;
+  background: black;
+  color: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  animation: fadeIn 0.6s ease-in;
+}
+
+.icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.success .icon {
+  color: #4CAF50; /* green */
+}
+
+.failed .icon {
+  color: #F44336; /* red */
+}
+
+.result-container h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.result-container p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.back-home {
+  color: white;
+  background-color: #635bff;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.back-home:hover {
+  background-color: #5048e5;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
