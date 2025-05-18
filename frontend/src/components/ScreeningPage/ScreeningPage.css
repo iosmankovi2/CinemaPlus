@@ -5,7 +5,9 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     background-color: #121212;
   }
-  
+  body, html {
+    overflow-x: hidden;
+  }
   /* === Header sekcija === */
   .screenings-header {
     display: flex;
@@ -15,7 +17,7 @@
     text-align: center;
   }
   
-  .screenings-header h2 {
+  .screen-page-title{
     font-size: 28px;
     font-weight: 700;
   }
@@ -32,6 +34,7 @@
     box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-bottom: 5%;
   }
   
   .add-screening-btn:hover {
@@ -58,7 +61,9 @@
     color: #aaa;
     margin-bottom: 20px;
   }
-  
+  .subtitle_screen{
+    text-align: left;
+  }
   /* === Tabela === */
   .screenings-table {
     width: 100%;
@@ -98,7 +103,7 @@
   
   /* === Akcione dugmadi === */
   .edit-btn,
-  .cancel-btn {
+  .cancel-btn-sc {
     padding: 6px 12px;
     margin-right: 6px;
     font-size: 13px;
@@ -119,16 +124,16 @@
     transform: scale(1.05);
   }
   
-  .cancel-btn {
+  .cancel-btn-sc {
     background-color: #ef4444;
     color: white;
   }
   
-  .cancel-btn:hover {
+  .cancel-btn-sc:hover {
     background-color: #f87171;
     transform: scale(1.05);
   }
-  .screenings-header h2 {
+  .screen-page-title{
       color: #ef4444; 
       font-size: 36px;
       font-weight: 800;

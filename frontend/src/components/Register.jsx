@@ -59,7 +59,6 @@ export default function Register() {
         </div>
         <div className="register-toggle">
           <button className="login-btn" onClick={() => navigate('/login')}>Login</button>
-          <button className="register-btn">Register</button>
         </div>
         <form onSubmit={handleSubmit} className="form">
           <div className="name-fields">
@@ -111,11 +110,6 @@ export default function Register() {
             Create Account
           </button>
         </form>
-        <div className="or-text">OR CONTINUE WITH</div>
-        <div className="social-buttons">
-          <button className="social-btn">Google</button>
-          <button className="social-btn">Facebook</button>
-        </div>
         <p className="terms-text">
           By continuing, you agree to our <span className="highlight">Terms of Service</span> and <span className="highlight">Privacy Policy</span>.
         </p>

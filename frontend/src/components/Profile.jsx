@@ -50,7 +50,7 @@ const Profile = () => {
     const fetchReservations = async () => {
       if (!userId || !token) return;
       try {
-        const response = await fetch(`http://localhost:8089/api/reservations/user/${userId}`, {
+        const response = await fetch(`http://localhost:8089/api/ticket/user/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

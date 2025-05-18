@@ -9,12 +9,36 @@ const MovieDetails = () => {
   const [selectedDay, setSelectedDay] = useState('today');
   const [projections, setProjections] = useState([]);
   const [selectedProjection, setSelectedProjection] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [newReview, setNewReview] = useState({ comment: '', rating: 5 });
+  const isLoggedIn = !!localStorage.getItem('token');
 
   useEffect(() => {
     fetch(`/api/movies/${id}`)
       .then(res => res.json())
       .then(data => setMovie(data));
   }, [id]);
+
+  useEffect(() => {
+    fetch(`/api/reviews/movie/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+        return res.json();
+      })
+      .then(data => setReviews(data))
+      .catch(err => console.error('Failed to fetch reviews', err));
+  }, [id]);
+
+  useEffect(() => {
+    if (!movie || !movie.currentlyShowing) return;
+    const date = getDateForDay(selectedDay).toISOString().split('T')[0];
+    fetch(`/api/projections/by-date?movieId=${id}&date=${date}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log("Fetched projections:", data);
+        setProjections(data);
+      });
+  }, [selectedDay, movie]);
 
   const getDateForDay = (day) => {
     const today = new Date();
@@ -24,18 +48,41 @@ const MovieDetails = () => {
     return newDate;
   };
 
-useEffect(() => {
-  if (!movie || !movie.currentlyShowing) return;
-  const date = getDateForDay(selectedDay).toISOString().split('T')[0];
-  fetch(`/api/projections/by-date?movieId=${id}&date=${date}`)
-    .then(res => res.json())
-    .then(data => {
-      console.log("Fetched projections:", data); // <== OVO DODAJ
-      setProjections(data);
-    });
-}, [selectedDay, movie]);
+  const handleReviewSubmit = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('You must be logged in to leave a review.');
+      return;
+    }
 
+    try {
+      const response = await fetch('http://localhost:8089/api/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          comment: newReview.comment,
+          rating: newReview.rating,
+          movie: { id: parseInt(id) }
+        })
+      });
 
+      if (!response.ok) {
+        const text = await response.text();
+        alert('Failed to add review: ' + text);
+        return;
+      }
+
+      const added = await response.json();
+      setReviews(prev => [...prev, added]);
+      setNewReview({ comment: '', rating: 5 });
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong.');
+    }
+  };
 
   const formatType = (type) => {
     if (type === 'TWO_D') return '2D';
@@ -49,13 +96,10 @@ useEffect(() => {
       alert("Please select a screening time first.");
       return;
     }
-
     if (!selectedProjection.hallId) {
       alert("Hall ID is missing for this projection.");
       return;
     }
-
-    // Redirekcija na izbor sjedišta
     window.location.href = `/sale/${selectedProjection.hallId}?projectionId=${selectedProjection.id}`;
   };
 
@@ -69,6 +113,7 @@ useEffect(() => {
           alt={movie.title}
           className="movie-detail-img"
         />
+
         <div className="movie-detail-info">
           <h1>{movie.title}</h1>
           <div className="movie-meta">
@@ -90,25 +135,33 @@ useEffect(() => {
             <>
               <p className="movie-section-title">Screenings</p>
               <div className="screening-buttons">
-                <button className={selectedDay === 'today' ? 'active' : ''} onClick={() => setSelectedDay('today')}>Today</button>
-                <button className={selectedDay === 'tomorrow' ? 'active' : ''} onClick={() => setSelectedDay('tomorrow')}>Tomorrow</button>
-                <button className={selectedDay === 'after' ? 'active' : ''} onClick={() => setSelectedDay('after')}>Day After</button>
+                {['today', 'tomorrow', 'after'].map((day) => (
+                  <button
+                    key={day}
+                    className={selectedDay === day ? 'active' : ''}
+                    onClick={() => setSelectedDay(day)}
+                  >
+                    {day.charAt(0).toUpperCase() + day.slice(1)}
+                  </button>
+                ))}
               </div>
 
               <div className="time-buttons">
                 {projections.length > 0 ? (
                   projections.map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => {
-                      setSelectedProjection(p);
-                      localStorage.setItem("selectedProjection", JSON.stringify(p)); // za kasnije
-                    }}
-                    className={selectedProjection?.id === p.id ? 'active' : ''}
-                  >
-                    {new Date(p.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ({formatType(p.projectionType)})
-                  </button>
-
+                    <button
+                      key={p.id}
+                      onClick={() => {
+                        setSelectedProjection(p);
+                        localStorage.setItem("selectedProjection", JSON.stringify(p));
+                      }}
+                      className={selectedProjection?.id === p.id ? 'active' : ''}
+                    >
+                      {new Date(p.startTime).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })} ({formatType(p.projectionType)})
+                    </button>
                   ))
                 ) : (
                   <p style={{ color: '#aaa' }}>No screenings available for selected day.</p>
@@ -125,7 +178,7 @@ useEffect(() => {
             <button onClick={() => setShowTrailer(!showTrailer)}>
               🎬 {showTrailer ? 'Hide Trailer' : 'Watch Trailer'}
             </button>
-            {movie.currentlyShowing && (
+            {movie.currentlyShowing && isLoggedIn && (
               <button onClick={handleBookTickets}>🎟️ Book Tickets</button>
             )}
           </div>
@@ -145,6 +198,69 @@ useEffect(() => {
             </div>
           )}
         </div>
+
+        {movie.currentlyShowing && (
+          <div className="review-section">
+            <h2>📝 Reviews</h2>
+
+            {reviews.length === 0 ? (
+              <p>No reviews yet. Be the first to write one!</p>
+            ) : (
+              <ul className="review-list">
+                {reviews.map((r) => (
+                  <li key={r.id} className="review-item">
+                    <p><strong>{r.userName}</strong> rated it {r.rating} ⭐</p>
+                    <p>{r.comment}</p>
+                    <p className="review-date">{new Date(r.createdAt).toLocaleDateString()}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <div className="add-review-form">
+              <h3>Add Your Review</h3>
+              {isLoggedIn ? (
+                <>
+                  <textarea
+                    value={newReview.comment}
+                    onChange={(e) =>
+                      setNewReview({ ...newReview, comment: e.target.value })
+                    }
+                    placeholder="Write your comment here..."
+                    rows={4}
+                    className="review-textarea"
+                  />
+                  <div className="rating-dropdown">
+                    <label htmlFor="rating">Rating:</label>
+                    <select
+                      id="rating"
+                      value={newReview.rating}
+                      onChange={(e) =>
+                        setNewReview({ ...newReview, rating: parseInt(e.target.value) })
+                      }
+                    >
+                      <option disabled value="">Choose rating</option>
+                      {[1, 2, 3, 4, 5].map((val) => (
+                        <option key={val} value={val}>{val} ⭐</option>
+                      ))}
+                    </select>
+                  </div>
+                  <button
+                    onClick={handleReviewSubmit}
+                    className="submit-btn"
+                    style={{ marginTop: '12px' }}
+                  >
+                    Submit Review
+                  </button>
+                </>
+              ) : (
+                <p style={{ fontStyle: 'italic', color: '#888' }}>
+                  You must be logged in to write a review.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

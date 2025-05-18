@@ -7,6 +7,8 @@ import AdminLayout from "../AdminLayout";
 const AdminDashboard = () => {
     const [activeUsers, setActiveUsers] = useState(0);
     const [activeMovies, setActiveMovies] = useState(0);
+    const [nowShowing, setNowShowing] = useState(0);
+    const [upcoming, setUpcoming] = useState(0);
 
     const {logout} = useContext(AuthContext);
     const navigate = useNavigate();
@@ -14,6 +16,13 @@ const AdminDashboard = () => {
         logout();
         navigate('/login');
     };
+    fetch("/api/movies/count-by-status")
+    .then(res => res.json())
+    .then(data => {
+        setNowShowing(data.showing);
+        setUpcoming(data.upcoming);
+    })
+    .catch(err => console.error("Failed to load movie counts:", err));
 
     useEffect(() => {
         fetch("/api/users/active-count")

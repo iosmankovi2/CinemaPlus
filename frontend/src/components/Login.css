@@ -139,4 +139,25 @@
   .terms-text .highlight {
     color: #ef4444;
   }
+  .register-redirect {
+    margin-top: 16px;
+    text-align: center;
+  }
+  
+  .register-text {
+    color: #d4d4d8;
+    font-size: 14px;
+  }
+  
+  .register-link {
+    color: red;
+    font-weight: 400;
+    cursor: pointer;
+    transition: text-decoration 0.2s ease;
+  }
+  
+  .register-link:hover {
+    text-decoration: underline;
+  }
+  
   

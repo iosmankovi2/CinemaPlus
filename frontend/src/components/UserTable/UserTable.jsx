@@ -122,7 +122,6 @@ const handleSaveEdit = (id, updatedData) => {
   
   return (
       <AdminLayout>
-    <div className="user-header">
     <div className="user-header-top">
       <h2 className="user-page-title">User Management</h2>
       <button className="add-user-btn" onClick={() => setShowAddModal(true)}>
@@ -132,7 +131,7 @@ const handleSaveEdit = (id, updatedData) => {
   </div>
     <div className="table-container">
     <h3>List of Users</h3>
-    <p className="subtitle">Manage all registered users, roles and activity status</p>
+    <p className="subtitle_user">Manage all registered users, roles and activity status</p>
       <Filters setRole={setRole} setStatus={setStatus} setSearchTerm={setSearchTerm}/>
       <table>
         <thead>
@@ -141,7 +140,6 @@ const handleSaveEdit = (id, updatedData) => {
             <th>Role</th>
             <th>Status</th>
             <th>Last Login</th>
-            <th>Bookings</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -173,7 +171,6 @@ const handleSaveEdit = (id, updatedData) => {
   onClose={() => setShowAddModal(false)}
   onSave={handleAddUser}
 />
-    </div>
     </div>
       </AdminLayout>
   );

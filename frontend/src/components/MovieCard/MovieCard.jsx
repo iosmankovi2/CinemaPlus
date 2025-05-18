@@ -1,6 +1,7 @@
 import React from 'react';
 import './MovieCard.css';
 import { Link } from 'react-router-dom';
+const isLoggedIn = !!localStorage.getItem('token');
 
 const MovieCard = ({ id, title, genre, duration, imageUrl, moviecast }) => {
   return (
@@ -12,7 +13,9 @@ const MovieCard = ({ id, title, genre, duration, imageUrl, moviecast }) => {
       />
       <h3>{title}</h3>
       <p>{genre} • {duration} min</p>
+      {isLoggedIn ? (
       <button className="book-btn">Book Tickets</button>
+        ) : null}
     </Link>
   );
 };
