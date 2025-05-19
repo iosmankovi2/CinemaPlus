@@ -1,4 +1,4 @@
-package com.example.cinemaplus.hall.model.dto;
+package com.example.cinemaplus.hall.hall.dto;
 
 public class HallDTO {
     private Long id;

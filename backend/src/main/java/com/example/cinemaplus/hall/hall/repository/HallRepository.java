@@ -1,7 +1,8 @@
-package com.example.cinemaplus.hall.model.repository;
+package com.example.cinemaplus.hall.hall.repository;
 
-import com.example.cinemaplus.hall.model.model.Hall;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.cinemaplus.hall.hall.model.Hall;
 
 public interface HallRepository extends JpaRepository<Hall, Long> {
 }
