@@ -6,6 +6,7 @@ import { AuthContext } from '../context/AuthContext';
 
 export default function Login() {
   const [user, setUser] = useState({ email: '', password: '' });
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
@@ -14,6 +15,7 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage(''); 
 
     try {
       const response = await fetch('http://localhost:8089/api/users/login', {
@@ -22,11 +24,13 @@ export default function Login() {
         body: JSON.stringify(user),
       });
 
-      if (!response.ok) {
-        const text = await response.text();
-        alert('Login failed: ' + text);
-        return;
-      }
+     
+      if (!response.ok) {
+        const text = await response.text();
+        setErrorMessage('Invalid username or password.'); // Postavi poruku o grešci
+        return;
+      }
+
 
       const data = await response.json();
       login(data.token, data.role);
@@ -39,9 +43,9 @@ export default function Login() {
         navigate('/user');
       }
     } catch (err) {
-      alert('Error: Backend not running or wrong URL.');
-      console.error(err);
-    }
+      setErrorMessage('Error: Backend not running or wrong URL.'); // Postavi poruku o grešci za grešku sa serverom
+      console.error(err);
+    }
   };
 
   return (
@@ -75,7 +79,8 @@ export default function Login() {
             onChange={handleChange}
             className="input-full"
             required
-          />
+        />
+         {errorMessage && <p className="error-message">{errorMessage}</p>}
           <button type="submit" className="submit-btn">
             Sign in
           </button>

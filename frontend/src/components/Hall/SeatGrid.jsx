@@ -7,15 +7,22 @@ const SeatGrid = ({ hallId }) => {
   const [seats, setSeats] = useState([]);
   const [selected, setSelected] = useState([]);
   const [hallName, setHallName] = useState(location.state?.hallName || '');
-  const [ticketType, setTicketType] = useState('E_TICKET');
+  const [ticketType, setTicketType] = useState('E_TICKET'); 
   const [showPreview, setShowPreview] = useState(false);
   const [selectedProjection, setSelectedProjection] = useState(
     JSON.parse(localStorage.getItem('selectedProjection')) || null
   );
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+  const [isHallRental, setIsHallRental] = useState(!location.search.includes('projectionId'));
+  const [rentalStart, setRentalStart] = useState('');
+  const [rentalEnd, setRentalEnd] = useState('');
 
   const projectionId = new URLSearchParams(location.search).get('projectionId');
 
-  // Dohvati sjedišta za salu
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem('token'));
+  }, [localStorage.getItem('token')]);
+
   useEffect(() => {
     fetch(`http://localhost:8089/api/seats/hall/${hallId}`)
       .then(res => res.json())
@@ -29,25 +36,45 @@ const SeatGrid = ({ hallId }) => {
     );
   };
 
-  // Rezervacija
   const handleReservation = async () => {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
 
-    if (!token || !userId || !projectionId) {
-      alert("Missing authentication or projection info");
+    if (!token || !userId) {
+      alert("You must be logged in to make a reservation.");
       return;
     }
 
-    const payload = {
-      userId: parseInt(userId),
-      projectionId: parseInt(projectionId),
-      seatIds: selected,
-      type: ticketType
-    };
+    let payload;
+    let apiUrl;
+
+    if (projectionId) {
+      // Rezervacija za projekciju filma
+      payload = {
+        userId: parseInt(userId),
+        projectionId: parseInt(projectionId),
+        seatIds: selected,
+        type: ticketType
+      };
+      apiUrl = "http://localhost:8089/api/tickets";
+    } else {
+      // Samostalna rezervacija sale
+      if (!rentalStart || !rentalEnd) {
+        alert("Please select the rental start and end times.");
+        return;
+      }
+      payload = {
+        userId: parseInt(userId),
+        hallId: parseInt(hallId),
+        seatIds: selected, // Možda želiš rezervirati specifična sjedala ili cijelu salu
+        startTime: rentalStart,
+        endTime: rentalEnd,
+      };
+      apiUrl = "http://localhost:8089/api/halls/reserve"; // Pretpostavljena nova API ruta
+    }
 
     try {
-      const response = await fetch("http://localhost:8089/api/tickets", {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,12 +84,13 @@ const SeatGrid = ({ hallId }) => {
       });
 
       if (response.ok) {
-        alert("Reservation successful!");
-        setShowPreview(true);
-        setShowPreview(true);
+        alert(projectionId ? "Reservation successful!" : "Hall reservation successful!");
+        setShowPreview(!!projectionId); // Prikazuj preview samo za rezervacije karata
+        setSelected([]);
         const updated = await fetch(`http://localhost:8089/api/seats/hall/${hallId}`).then(r => r.json());
         setSeats(updated);
-
+        setRentalStart('');
+        setRentalEnd('');
       } else {
         const text = await response.text();
         alert("Error: " + text);
@@ -72,7 +100,6 @@ const SeatGrid = ({ hallId }) => {
     }
   };
 
-  // Raspored sjedala po redovima
   const renderGrid = () => {
     const grouped = {};
     seats.forEach(seat => {
@@ -111,15 +138,48 @@ const SeatGrid = ({ hallId }) => {
 
       {selected.length > 0 && (
         <div className="summary">
-          <label>Delivery Method:</label>
-          <select value={ticketType} onChange={e => setTicketType(e.target.value)}>
-            <option value="E_TICKET">Download PDF</option>
-            <option value="EMAIL_TICKET">Email</option>
-            <option value="PHYSICAL_TICKET">Pick up</option>
-          </select>
-          <button onClick={handleReservation} className="btn-reserve">Confirm reservation</button>
+          {projectionId && (
+            <>
+              <label>Delivery Method:</label>
+              <select value={ticketType} onChange={e => setTicketType(e.target.value)}>
+                <option value="E_TICKET">Download PDF</option>
+                <option value="EMAIL_TICKET">Email</option>
+                <option value="PHYSICAL_PICKUP">Pick up</option>
+              </select>
+            </>
+          )}
+          {isLoggedIn && isHallRental && (
+  <div className="rental-period">
+    <div className="rental-time-input">
+      <label htmlFor="rentalStart">Start Time:</label>
+      <input
+        type="datetime-local"
+        id="rentalStart"
+        value={rentalStart}
+        onChange={(e) => setRentalStart(e.target.value)}
+        required
+      />
+    </div>
+    <div className="rental-time-input">
+      <label htmlFor="rentalEnd">End Time:</label>
+      <input
+        type="datetime-local"
+        id="rentalEnd"
+        value={rentalEnd}
+        onChange={(e) => setRentalEnd(e.target.value)}
+        required
+      />
+    </div>
+  </div>
+)}
           <p>Selected: {selected.length} seats</p>
           <p>Total: {(selected.length * 12).toFixed(2)} BAM</p>
+          {isLoggedIn && (
+            <button onClick={handleReservation} className="btn-reserve">Confirm reservation</button>
+          )}
+          {!isLoggedIn && (
+            <p>You need to be logged in to make a reservation.</p>
+          )}
         </div>
       )}
 

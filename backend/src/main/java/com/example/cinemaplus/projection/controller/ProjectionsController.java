@@ -11,8 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.cinemaplus.hall.model.model.Hall;
-import com.example.cinemaplus.hall.model.repository.HallRepository;
+import com.example.cinemaplus.hall.hall.model.Hall;
+import com.example.cinemaplus.hall.hall.repository.HallRepository;
 import com.example.cinemaplus.movie.model.Movie;
 import com.example.cinemaplus.movie.repository.MovieRepository;
 import com.example.cinemaplus.projection.DTO.ProjectionsCreateDTO;

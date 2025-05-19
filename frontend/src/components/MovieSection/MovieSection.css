@@ -3,6 +3,7 @@
     background-color: #0e0e0e;
     color: #ffffff;
     min-height: 100vh;
+
   }
   
   .home-title {
@@ -96,6 +97,7 @@
     justify-content: center;
     margin-top: 5%;
     margin-bottom: 1%;
+    padding: 50px;
   }
   
   .search-input {

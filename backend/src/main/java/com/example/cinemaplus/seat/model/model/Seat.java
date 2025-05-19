@@ -1,6 +1,7 @@
 package com.example.cinemaplus.seat.model.model;
 
-import com.example.cinemaplus.hall.model.model.Hall;
+import com.example.cinemaplus.hall.hall.model.Hall;
+
 import jakarta.persistence.*;
 
 @Entity

@@ -2,7 +2,7 @@ package com.example.cinemaplus.projection.model;
 
 import java.time.LocalDateTime;
 
-import com.example.cinemaplus.hall.model.model.Hall;
+import com.example.cinemaplus.hall.hall.model.Hall;
 import com.example.cinemaplus.movie.model.Movie;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.example.cinemaplus.projection.model.ProjectionType;

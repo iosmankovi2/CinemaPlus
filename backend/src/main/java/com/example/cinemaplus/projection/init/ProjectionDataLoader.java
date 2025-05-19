@@ -1,7 +1,7 @@
 package com.example.cinemaplus.projection.init;
 
-import com.example.cinemaplus.hall.model.model.Hall;
-import com.example.cinemaplus.hall.model.repository.HallRepository;
+import com.example.cinemaplus.hall.hall.model.Hall;
+import com.example.cinemaplus.hall.hall.repository.HallRepository;
 import com.example.cinemaplus.movie.model.Movie;
 import com.example.cinemaplus.movie.repository.MovieRepository;
 import com.example.cinemaplus.projection.model.Projection;

@@ -1,4 +1,4 @@
-package com.example.cinemaplus.hall.model.model;
+package com.example.cinemaplus.hall.hall.model;
 
 import com.example.cinemaplus.projection.model.Projection;
 import com.example.cinemaplus.seat.model.model.Seat;
