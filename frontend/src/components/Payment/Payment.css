@@ -1,0 +1,58 @@
+.payment-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: black;
+  color: #f4f4f4;
+  padding: 2rem;
+}
+
+.payment-card {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 2.5rem;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.payment-card h2 {
+  margin-bottom: 1rem;
+  font-size: 1.6rem;
+  color: #ffffff;
+}
+
+.movie-label {
+  margin-top: 1rem;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.movie-title {
+  font-size: 1.3rem;
+  color: #fefefe;
+  margin-bottom: 1rem;
+}
+
+.price {
+  margin: 1.2rem 0;
+  font-size: 1rem;
+}
+
+.pay-button {
+  background-color: red;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.pay-button:hover {
+  background-color: red;
+}

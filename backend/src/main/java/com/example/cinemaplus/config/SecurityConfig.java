@@ -49,7 +49,8 @@ public class SecurityConfig {
                                 "/api/admin/*",
                                 "/api/reservations/user/*",
                                 "/api/reviews/movie/**",
-                                "/api/halls/reserve"
+                                "/api/halls/reserve",
+                                "/api/payment/**" 
                                 ).permitAll()
                                  .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
                         .anyRequest().authenticated()
