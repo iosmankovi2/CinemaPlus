@@ -7,7 +7,7 @@ const HallDetails = () => {
 
   return (
     <div>
-      <h2>Select Seats for Hall</h2>
+    
       <SeatGrid hallId={hallId} />
     </div>
   );

@@ -7,14 +7,21 @@ const SeatGrid = ({ hallId }) => {
   const [seats, setSeats] = useState([]);
   const [selected, setSelected] = useState([]);
   const [hallName, setHallName] = useState(location.state?.hallName || '');
-  const [ticketType, setTicketType] = useState('E_TICKET'); // Možda relevantno za samostalni zakup?
+  const [ticketType, setTicketType] = useState('E_TICKET'); 
   const [showPreview, setShowPreview] = useState(false);
   const [selectedProjection, setSelectedProjection] = useState(
     JSON.parse(localStorage.getItem('selectedProjection')) || null
   );
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const [isHallRental, setIsHallRental] = useState(!location.search.includes('projectionId'));
+  const [rentalStart, setRentalStart] = useState('');
+  const [rentalEnd, setRentalEnd] = useState('');
 
   const projectionId = new URLSearchParams(location.search).get('projectionId');
+
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem('token'));
+  }, [localStorage.getItem('token')]);
 
   useEffect(() => {
     fetch(`http://localhost:8089/api/seats/hall/${hallId}`)
@@ -52,11 +59,16 @@ const SeatGrid = ({ hallId }) => {
       apiUrl = "http://localhost:8089/api/tickets";
     } else {
       // Samostalna rezervacija sale
+      if (!rentalStart || !rentalEnd) {
+        alert("Please select the rental start and end times.");
+        return;
+      }
       payload = {
         userId: parseInt(userId),
         hallId: parseInt(hallId),
         seatIds: selected, // Možda želiš rezervirati specifična sjedala ili cijelu salu
-        // Ovdje bi idealno bilo imati i podatke o vremenu zakupa
+        startTime: rentalStart,
+        endTime: rentalEnd,
       };
       apiUrl = "http://localhost:8089/api/halls/reserve"; // Pretpostavljena nova API ruta
     }
@@ -77,6 +89,8 @@ const SeatGrid = ({ hallId }) => {
         setSelected([]);
         const updated = await fetch(`http://localhost:8089/api/seats/hall/${hallId}`).then(r => r.json());
         setSeats(updated);
+        setRentalStart('');
+        setRentalEnd('');
       } else {
         const text = await response.text();
         alert("Error: " + text);
@@ -134,11 +148,37 @@ const SeatGrid = ({ hallId }) => {
               </select>
             </>
           )}
-          <button onClick={handleReservation} className="btn-reserve">Confirm reservation</button>
+          {isLoggedIn && isHallRental && (
+  <div className="rental-period">
+    <div className="rental-time-input">
+      <label htmlFor="rentalStart">Start Time:</label>
+      <input
+        type="datetime-local"
+        id="rentalStart"
+        value={rentalStart}
+        onChange={(e) => setRentalStart(e.target.value)}
+        required
+      />
+    </div>
+    <div className="rental-time-input">
+      <label htmlFor="rentalEnd">End Time:</label>
+      <input
+        type="datetime-local"
+        id="rentalEnd"
+        value={rentalEnd}
+        onChange={(e) => setRentalEnd(e.target.value)}
+        required
+      />
+    </div>
+  </div>
+)}
           <p>Selected: {selected.length} seats</p>
           <p>Total: {(selected.length * 12).toFixed(2)} BAM</p>
-          {isHallRental && (
-            <p className="rental-note">Note: This is a hall rental. Please confirm the rental period and price.</p>
+          {isLoggedIn && (
+            <button onClick={handleReservation} className="btn-reserve">Confirm reservation</button>
+          )}
+          {!isLoggedIn && (
+            <p>You need to be logged in to make a reservation.</p>
           )}
         </div>
       )}

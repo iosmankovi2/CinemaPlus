@@ -22,9 +22,15 @@ public class HallController {
         return hallService.getAllHalls();
     }
 
-    @PostMapping("/reserve")
+@PostMapping("/reserve")
     public ResponseEntity<?> reserveHall(@RequestBody HallReservationRequest request) {
-        boolean success = hallService.reserveHall(request.getHallId(), request.getUserId(), request.getSeatIds());
+        boolean success = hallService.reserveHall(
+                request.getHallId(),
+                request.getUserId(),
+                request.getSeatIds(),
+                request.getStartTime(),
+                request.getEndTime() 
+        );
         if (success) {
             return ResponseEntity.ok("Hall reserved successfully.");
         } else {

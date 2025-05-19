@@ -21,6 +21,10 @@ public class HallReservation {
 
     private LocalDateTime reservationDate;
 
+    private LocalDateTime startTime;
+
+    private LocalDateTime endTime;
+
     // Getters and setters
 
     public Long getId() {
@@ -53,5 +57,21 @@ public class HallReservation {
 
     public void setReservationDate(LocalDateTime reservationDate) {
         this.reservationDate = reservationDate;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 }

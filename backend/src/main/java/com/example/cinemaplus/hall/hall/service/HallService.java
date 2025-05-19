@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Service
 public class HallService {
 
@@ -25,10 +24,10 @@ public class HallService {
     private SeatRepository seatRepository;
 
     @Autowired
-    private UserRepository userRepository; // Potreban za dohvat korisnika
+    private UserRepository userRepository;
 
     @Autowired
-    private HallReservationRepository hallReservationRepository; // Potreban za spremanje rezervacije sale
+    private HallReservationRepository hallReservationRepository;
 
     public List<HallDTO> getAllHalls() {
         return hallRepository.findAll()
@@ -45,7 +44,7 @@ public class HallService {
                 .collect(Collectors.toList());
     }
 
-    public boolean reserveHall(Long hallId, Long userId, List<Long> seatIds) {
+    public boolean reserveHall(Long hallId, Long userId, List<Long> seatIds, LocalDateTime startTime, LocalDateTime endTime) {
         Hall hall = hallRepository.findById(hallId).orElse(null);
         User user = userRepository.findById(userId).orElse(null);
 
@@ -54,25 +53,30 @@ public class HallService {
             return false;
         }
 
-        // Ovdje bi trebala doći složenija logika za provjeru dostupnosti dvorane
-        // za određeni vremenski period ako to podržavaš.
-        // Za sada, pretpostavljamo da je dvorana dostupna za rezervaciju.
+        // Ovdje dolazi logika za provjeru da li je dvorana slobodna u zadanom periodu
+        // Ovo može uključivati pretragu postojećih rezervacija koje se preklapaju.
+        // Za sada, preskačemo tu provjeru radi jednostavnosti.
 
         HallReservation reservation = new HallReservation();
         reservation.setHall(hall);
         reservation.setUser(user);
         reservation.setReservationDate(LocalDateTime.now());
-        // Možda ćeš htjeti dodati i listu rezerviranih sjedala ako podržavaš
-        // rezervaciju specifičnih sjedala unutar sale za zakup.
-        // reservation.setReservedSeats(seatRepository.findAllById(seatIds));
-
+        reservation.setStartTime(startTime);
+        reservation.setEndTime(endTime);
+      
         try {
             hallReservationRepository.save(reservation);
-            System.out.println("Hall " + hallId + " reserved successfully for user " + userId);
+            System.out.println("Hall " + hallId + " reserved successfully for user " + userId +
+                               ", from " + startTime + " to " + endTime);
             return true;
         } catch (Exception e) {
             System.out.println("Error saving hall reservation: " + e.getMessage());
             return false;
         }
+    }
+
+    public boolean reserveHall(Long hallId, Long userId, List<Long> seatIds) {
+        
+        throw new UnsupportedOperationException("Reservation time must be specified for hall rental.");
     }
 }

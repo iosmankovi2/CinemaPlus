@@ -10,7 +10,8 @@ export default function Register() {
     password: '',
     confirmPassword: '',
   });
-
+  const [modalVisible, setModalVisible] = useState(false); // State za vidljivost modala
+  const [modalMessage, setModalMessage] = useState(''); // State za poruku u modalu
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -21,7 +22,9 @@ export default function Register() {
     e.preventDefault();
 
     if (user.password !== user.confirmPassword) {
-      alert("Passwords do not match");
+      setModalMessage('Passwords do not match');
+      setModalVisible(true);
+      setTimeout(() => setModalVisible(false), 3000);
       return;
     }
 
@@ -38,14 +41,22 @@ export default function Register() {
       });
 
       if (response.ok) {
-        alert("Registration successful!");
-        navigate('/login');
+        setModalMessage('Registration successful!');
+        setModalVisible(true);
+        setTimeout(() => {
+          setModalVisible(false);
+          navigate('/login');
+        }, 3000);
       } else {
         const errorText = await response.text();
-        alert("Registration failed: " + errorText);
+        setModalMessage('Registration failed: ' + errorText);
+        setModalVisible(true);
+        setTimeout(() => setModalVisible(false), 2000);
       }
     } catch (error) {
-      alert("An error occurred: " + error.message);
+      setModalMessage('An error occurred: ' + error.message);
+      setModalVisible(true);
+      setTimeout(() => setModalVisible(false), 2000);
     }
   };
 
@@ -110,10 +121,14 @@ export default function Register() {
             Create Account
           </button>
         </form>
-        <p className="terms-text">
-          By continuing, you agree to our <span className="highlight">Terms of Service</span> and <span className="highlight">Privacy Policy</span>.
-        </p>
       </div>
+      {modalVisible && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <p>{modalMessage}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
