@@ -55,7 +55,7 @@ const Hall = () => {
               <p>Total seats: {hall.totalSeats}</p>
               <p>Available seats: {hall.availableSeats}</p>
               <Link to={`/sale/${hall.id}`} state={{ hallName: translatedName }}>
-                <button>Show seats</button>
+                <button>View Seats & Rent Hall</button> {/* Izmijenjen tekst dugmeta */}
               </Link>
             </div>
           );

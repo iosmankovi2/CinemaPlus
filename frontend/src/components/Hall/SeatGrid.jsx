@@ -7,15 +7,15 @@ const SeatGrid = ({ hallId }) => {
   const [seats, setSeats] = useState([]);
   const [selected, setSelected] = useState([]);
   const [hallName, setHallName] = useState(location.state?.hallName || '');
-  const [ticketType, setTicketType] = useState('E_TICKET');
+  const [ticketType, setTicketType] = useState('E_TICKET'); // Možda relevantno za samostalni zakup?
   const [showPreview, setShowPreview] = useState(false);
   const [selectedProjection, setSelectedProjection] = useState(
     JSON.parse(localStorage.getItem('selectedProjection')) || null
   );
+  const [isHallRental, setIsHallRental] = useState(!location.search.includes('projectionId'));
 
   const projectionId = new URLSearchParams(location.search).get('projectionId');
 
-  // Dohvati sjedišta za salu
   useEffect(() => {
     fetch(`http://localhost:8089/api/seats/hall/${hallId}`)
       .then(res => res.json())
@@ -29,25 +29,40 @@ const SeatGrid = ({ hallId }) => {
     );
   };
 
-  // Rezervacija
   const handleReservation = async () => {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
 
-    if (!token || !userId || !projectionId) {
-      alert("Missing authentication or projection info");
+    if (!token || !userId) {
+      alert("You must be logged in to make a reservation.");
       return;
     }
 
-    const payload = {
-      userId: parseInt(userId),
-      projectionId: parseInt(projectionId),
-      seatIds: selected,
-      type: ticketType
-    };
+    let payload;
+    let apiUrl;
+
+    if (projectionId) {
+      // Rezervacija za projekciju filma
+      payload = {
+        userId: parseInt(userId),
+        projectionId: parseInt(projectionId),
+        seatIds: selected,
+        type: ticketType
+      };
+      apiUrl = "http://localhost:8089/api/tickets";
+    } else {
+      // Samostalna rezervacija sale
+      payload = {
+        userId: parseInt(userId),
+        hallId: parseInt(hallId),
+        seatIds: selected, // Možda želiš rezervirati specifična sjedala ili cijelu salu
+        // Ovdje bi idealno bilo imati i podatke o vremenu zakupa
+      };
+      apiUrl = "http://localhost:8089/api/halls/reserve"; // Pretpostavljena nova API ruta
+    }
 
     try {
-      const response = await fetch("http://localhost:8089/api/tickets", {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,12 +72,11 @@ const SeatGrid = ({ hallId }) => {
       });
 
       if (response.ok) {
-        alert("Reservation successful!");
-        setShowPreview(true);
-        setShowPreview(true);
+        alert(projectionId ? "Reservation successful!" : "Hall reservation successful!");
+        setShowPreview(!!projectionId); // Prikazuj preview samo za rezervacije karata
+        setSelected([]);
         const updated = await fetch(`http://localhost:8089/api/seats/hall/${hallId}`).then(r => r.json());
         setSeats(updated);
-
       } else {
         const text = await response.text();
         alert("Error: " + text);
@@ -72,7 +86,6 @@ const SeatGrid = ({ hallId }) => {
     }
   };
 
-  // Raspored sjedala po redovima
   const renderGrid = () => {
     const grouped = {};
     seats.forEach(seat => {
@@ -111,15 +124,22 @@ const SeatGrid = ({ hallId }) => {
 
       {selected.length > 0 && (
         <div className="summary">
-          <label>Delivery Method:</label>
-          <select value={ticketType} onChange={e => setTicketType(e.target.value)}>
-            <option value="E_TICKET">Download PDF</option>
-            <option value="EMAIL_TICKET">Email</option>
-            <option value="PHYSICAL_TICKET">Pick up</option>
-          </select>
+          {projectionId && (
+            <>
+              <label>Delivery Method:</label>
+              <select value={ticketType} onChange={e => setTicketType(e.target.value)}>
+                <option value="E_TICKET">Download PDF</option>
+                <option value="EMAIL_TICKET">Email</option>
+                <option value="PHYSICAL_PICKUP">Pick up</option>
+              </select>
+            </>
+          )}
           <button onClick={handleReservation} className="btn-reserve">Confirm reservation</button>
           <p>Selected: {selected.length} seats</p>
           <p>Total: {(selected.length * 12).toFixed(2)} BAM</p>
+          {isHallRental && (
+            <p className="rental-note">Note: This is a hall rental. Please confirm the rental period and price.</p>
+          )}
         </div>
       )}
 

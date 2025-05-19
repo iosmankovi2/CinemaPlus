@@ -1,7 +1,5 @@
 package com.example.cinemaplus.config;
 
-import com.example.cinemaplus.hall.model.model.Hall;
-import com.example.cinemaplus.hall.model.repository.HallRepository;
 import com.example.cinemaplus.projection.repository.ProjectionRepository;
 import com.example.cinemaplus.seat.model.model.Seat;
 import com.example.cinemaplus.seat.model.repository.SeatRepository;
@@ -14,6 +12,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.example.cinemaplus.hall.hall.model.Hall;
+import com.example.cinemaplus.hall.hall.repository.HallRepository;
 import com.example.cinemaplus.movie.model.Movie;
 import com.example.cinemaplus.projection.model.Projection;
 import com.example.cinemaplus.projection.model.ProjectionType;
