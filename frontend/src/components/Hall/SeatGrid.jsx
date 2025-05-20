@@ -7,7 +7,7 @@ const SeatGrid = ({ hallId }) => {
   const [seats, setSeats] = useState([]);
   const [selected, setSelected] = useState([]);
   const [hallName, setHallName] = useState(location.state?.hallName || '');
-  const [ticketType, setTicketType] = useState('E_TICKET'); 
+  const [ticketType, setTicketType] = useState('E_TICKET');
   const [showPreview, setShowPreview] = useState(false);
   const [selectedProjection, setSelectedProjection] = useState(
     JSON.parse(localStorage.getItem('selectedProjection')) || null
@@ -49,7 +49,6 @@ const SeatGrid = ({ hallId }) => {
     let apiUrl;
 
     if (projectionId) {
-      // Rezervacija za projekciju filma
       payload = {
         userId: parseInt(userId),
         projectionId: parseInt(projectionId),
@@ -58,7 +57,6 @@ const SeatGrid = ({ hallId }) => {
       };
       apiUrl = "http://localhost:8089/api/tickets";
     } else {
-      // Samostalna rezervacija sale
       if (!rentalStart || !rentalEnd) {
         alert("Please select the rental start and end times.");
         return;
@@ -66,11 +64,11 @@ const SeatGrid = ({ hallId }) => {
       payload = {
         userId: parseInt(userId),
         hallId: parseInt(hallId),
-        seatIds: selected, // Možda želiš rezervirati specifična sjedala ili cijelu salu
+        seatIds: selected,
         startTime: rentalStart,
         endTime: rentalEnd,
       };
-      apiUrl = "http://localhost:8089/api/halls/reserve"; // Pretpostavljena nova API ruta
+      apiUrl = "http://localhost:8089/api/halls/reserve";
     }
 
     try {
@@ -85,7 +83,7 @@ const SeatGrid = ({ hallId }) => {
 
       if (response.ok) {
         alert(projectionId ? "Reservation successful!" : "Hall reservation successful!");
-        setShowPreview(!!projectionId); // Prikazuj preview samo za rezervacije karata
+        setShowPreview(!!projectionId);
         setSelected([]);
         const updated = await fetch(`http://localhost:8089/api/seats/hall/${hallId}`).then(r => r.json());
         setSeats(updated);
@@ -149,31 +147,31 @@ const SeatGrid = ({ hallId }) => {
             </>
           )}
           {isLoggedIn && isHallRental && (
-  <div className="rental-period">
-    <div className="rental-time-input">
-      <label htmlFor="rentalStart">Start Time:</label>
-      <input
-        type="datetime-local"
-        id="rentalStart"
-        value={rentalStart}
-        onChange={(e) => setRentalStart(e.target.value)}
-        required
-      />
-    </div>
-    <div className="rental-time-input">
-      <label htmlFor="rentalEnd">End Time:</label>
-      <input
-        type="datetime-local"
-        id="rentalEnd"
-        value={rentalEnd}
-        onChange={(e) => setRentalEnd(e.target.value)}
-        required
-      />
-    </div>
-  </div>
-)}
+            <div className="rental-period">
+              <div className="rental-time-input">
+                <label htmlFor="rentalStart">Start Time:</label>
+                <input
+                  type="datetime-local"
+                  id="rentalStart"
+                  value={rentalStart}
+                  onChange={(e) => setRentalStart(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="rental-time-input">
+                <label htmlFor="rentalEnd">End Time:</label>
+                <input
+                  type="datetime-local"
+                  id="rentalEnd"
+                  value={rentalEnd}
+                  onChange={(e) => setRentalEnd(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+          )}
           <p>Selected: {selected.length} seats</p>
-          <p>Total: {(selected.length * 12).toFixed(2)} BAM</p>
+          {isLoggedIn && <p>Total: {(selected.length * 12).toFixed(2)} BAM</p>} {/* Conditional rendering cijene */}
           {isLoggedIn && (
             <button onClick={handleReservation} className="btn-reserve">Confirm reservation</button>
           )}
@@ -190,7 +188,7 @@ const SeatGrid = ({ hallId }) => {
           <p><strong>Hall:</strong> {selectedProjection.hallName}</p>
           <p><strong>Time:</strong> {new Date(selectedProjection.startTime).toLocaleString()}</p>
           <p><strong>Seats:</strong> {seatLabels}</p>
-          <p><strong>Total:</strong> {(selected.length * 12).toFixed(2)} BAM</p>
+          {isLoggedIn && <p><strong>Total:</strong> {(selected.length * 12).toFixed(2)} BAM</p>} {/* Conditional rendering cijene u previewu */}
         </div>
       )}
     </div>
