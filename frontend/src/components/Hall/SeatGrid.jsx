@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import './SeatGrid.css';
 import { useLocation } from 'react-router-dom';
+import './SeatGrid.css';
+import api from '../../axios';
 
 const SeatGrid = ({ hallId }) => {
   const location = useLocation();
@@ -15,11 +16,17 @@ const SeatGrid = ({ hallId }) => {
 
   const projectionId = new URLSearchParams(location.search).get('projectionId');
 
+<<<<<<< Updated upstream
   // Dohvati sjedišta za salu
   useEffect(() => {
     fetch(`http://localhost:8089/api/seats/hall/${hallId}`)
       .then(res => res.json())
       .then(data => Array.isArray(data) ? setSeats(data) : setSeats([]))
+=======
+  useEffect(() => {
+    api.get(`/seats/hall/${hallId}`)
+      .then(res => setSeats(Array.isArray(res.data) ? res.data : []))
+>>>>>>> Stashed changes
       .catch(() => setSeats([]));
   }, [hallId]);
 
@@ -31,8 +38,8 @@ const SeatGrid = ({ hallId }) => {
 
   // Rezervacija
   const handleReservation = async () => {
-    const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
+<<<<<<< Updated upstream
 
     if (!token || !userId || !projectionId) {
       alert("Missing authentication or projection info");
@@ -62,12 +69,93 @@ const SeatGrid = ({ hallId }) => {
         setSelected([]);
         const updated = await fetch(`http://localhost:8089/api/seats/hall/${hallId}`).then(r => r.json());
         setSeats(updated);
-      } else {
-        const text = await response.text();
-        alert("Error: " + text);
+=======
+    if (!userId) {
+      alert("You must be logged in to make a reservation.");
+      return;
+    }
+
+    let payload;
+    let apiPath;
+
+    if (projectionId) {
+      payload = {
+        userId: parseInt(userId),
+        projectionId: parseInt(projectionId),
+        seatIds: selected,
+        type: ticketType
+      };
+      apiPath = "/tickets";
+    } else {
+      if (!rentalStart || !rentalEnd) {
+        alert("Please select the rental start and end times.");
+        return;
       }
+      payload = {
+        userId: parseInt(userId),
+        hallId: parseInt(hallId),
+        seatIds: selected,
+        startTime: rentalStart,
+        endTime: rentalEnd,
+      };
+      apiPath = "/halls/reserve";
+    }
+
+    try {
+      const res = await api.post(apiPath, payload);
+      const reservationId = res.data;
+
+      alert("Reservation successful!");
+      setShowPreview(!!projectionId);
+      setSelected([]);
+
+      if (ticketType === 'E_TICKET') {
+        try {
+          const pdfRes = await api.get(`/tickets/pdf/${reservationId}`, {
+            responseType: 'blob'
+          });
+
+          // Provjera da li je stvarno PDF
+          const contentType = pdfRes.headers['content-type'];
+          if (contentType !== 'application/pdf') {
+            const text = await pdfRes.data.text();
+            alert("Error: " + text);
+            return;
+          }
+
+          const blob = new Blob([pdfRes.data], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'ticket.pdf';
+          a.click();
+        } catch (err) {
+          if (err.response?.status === 500) {
+            const text = await err.response.data.text?.();  // pokušaj dohvatiti poruku iz PDF-a
+            alert("Download error (500): " + (text || "Internal Server Error"));
+          } else {
+            alert("Download error: " + (err?.message || "Unknown error"));
+          }
+        }
+
+
+      } else if (ticketType === 'EMAIL_TICKET') {
+        const email = prompt("Enter your email address:");
+        if (email) {
+          await api.post(`/tickets/email/${reservationId}?email=${email}`);
+          alert("Ticket sent to your email.");
+        }
+>>>>>>> Stashed changes
+      } else {
+        alert("Your ticket will be available at the cinema.");
+      }
+
+      const updated = await api.get(`/seats/hall/${hallId}`);
+      setSeats(updated.data);
+      setRentalStart('');
+      setRentalEnd('');
     } catch (err) {
-      alert("Failed to fetch: " + err.message);
+      alert("Error: " + (err?.response?.data || err.message));
     }
   };
 
@@ -110,6 +198,7 @@ const SeatGrid = ({ hallId }) => {
 
       {selected.length > 0 && (
         <div className="summary">
+<<<<<<< Updated upstream
           <label>Delivery Method:</label>
           <select value={ticketType} onChange={e => setTicketType(e.target.value)}>
             <option value="E_TICKET">Download PDF</option>
@@ -119,6 +208,47 @@ const SeatGrid = ({ hallId }) => {
           <button onClick={handleReservation} className="btn-reserve">Confirm reservation</button>
           <p>Selected: {selected.length} seats</p>
           <p>Total: {(selected.length * 12).toFixed(2)} BAM</p>
+=======
+          {projectionId && (
+            <>
+              <label>Delivery Method:</label>
+              <select value={ticketType} onChange={e => setTicketType(e.target.value)}>
+                <option value="E_TICKET">Download PDF</option>
+                <option value="EMAIL_TICKET">Email</option>
+                <option value="PHYSICAL_PICKUP">Pick up</option>
+              </select>
+            </>
+          )}
+          {isLoggedIn && isHallRental && (
+            <div className="rental-period">
+              <div className="rental-time-input">
+                <label htmlFor="rentalStart">Start Time:</label>
+                <input
+                  type="datetime-local"
+                  id="rentalStart"
+                  value={rentalStart}
+                  onChange={(e) => setRentalStart(e.target.value)}
+                />
+              </div>
+              <div className="rental-time-input">
+                <label htmlFor="rentalEnd">End Time:</label>
+                <input
+                  type="datetime-local"
+                  id="rentalEnd"
+                  value={rentalEnd}
+                  onChange={(e) => setRentalEnd(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+          <p>Selected: {selected.length} seats</p>
+          {isLoggedIn && <p>Total: {(selected.length * 12).toFixed(2)} BAM</p>}
+          {isLoggedIn ? (
+            <button onClick={handleReservation} className="btn-reserve">Confirm reservation</button>
+          ) : (
+            <p>You need to be logged in to make a reservation.</p>
+          )}
+>>>>>>> Stashed changes
         </div>
       )}
 
@@ -129,7 +259,11 @@ const SeatGrid = ({ hallId }) => {
           <p><strong>Hall:</strong> {selectedProjection.hallName}</p>
           <p><strong>Time:</strong> {new Date(selectedProjection.startTime).toLocaleString()}</p>
           <p><strong>Seats:</strong> {seatLabels}</p>
+<<<<<<< Updated upstream
           <p><strong>Total:</strong> {(selected.length * 12).toFixed(2)} BAM</p>
+=======
+          {isLoggedIn && <p><strong>Total:</strong> {(selected.length * 12).toFixed(2)} BAM</p>}
+>>>>>>> Stashed changes
         </div>
       )}
     </div>

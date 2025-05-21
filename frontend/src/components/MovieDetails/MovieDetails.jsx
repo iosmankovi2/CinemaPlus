@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import api from '../../axios';
 import './MovieDetails.css';
 
 const MovieDetails = () => {
@@ -11,11 +12,28 @@ const MovieDetails = () => {
   const [selectedProjection, setSelectedProjection] = useState(null);
 
   useEffect(() => {
-    fetch(`/api/movies/${id}`)
-      .then(res => res.json())
-      .then(data => setMovie(data));
+    api.get(`/movies/${id}`)
+      .then(res => setMovie(res.data))
+      .catch(err => console.error('Failed to fetch movie', err));
   }, [id]);
 
+<<<<<<< Updated upstream
+=======
+  useEffect(() => {
+    api.get(`/reviews/movie/${id}`)
+      .then(res => setReviews(res.data))
+      .catch(err => console.error('Failed to fetch reviews', err));
+  }, [id]);
+
+  useEffect(() => {
+    if (!movie || !movie.currentlyShowing) return;
+    const date = getDateForDay(selectedDay).toISOString().split('T')[0];
+    api.get(`/projections/by-date?movieId=${id}&date=${date}`)
+      .then(res => setProjections(res.data))
+      .catch(err => console.error('Failed to fetch projections', err));
+  }, [selectedDay, movie]);
+
+>>>>>>> Stashed changes
   const getDateForDay = (day) => {
     const today = new Date();
     const newDate = new Date(today);
@@ -24,6 +42,7 @@ const MovieDetails = () => {
     return newDate;
   };
 
+<<<<<<< Updated upstream
 useEffect(() => {
   if (!movie || !movie.currentlyShowing) return;
   const date = getDateForDay(selectedDay).toISOString().split('T')[0];
@@ -36,6 +55,21 @@ useEffect(() => {
 }, [selectedDay, movie]);
 
 
+=======
+  const handleReviewSubmit = async () => {
+    try {
+      const response = await api.post('/reviews', {
+        comment: newReview.comment,
+        rating: newReview.rating,
+        movie: { id: parseInt(id) }
+      });
+      setReviews(prev => [...prev, response.data]);
+      setNewReview({ comment: '', rating: 5 });
+    } catch (err) {
+      alert('Failed to submit review');
+    }
+  };
+>>>>>>> Stashed changes
 
   const formatType = (type) => {
     if (type === 'TWO_D') return '2D';
@@ -55,7 +89,11 @@ useEffect(() => {
       return;
     }
 
+<<<<<<< Updated upstream
     // Redirekcija na izbor sjedišta
+=======
+    localStorage.setItem("selectedProjection", JSON.stringify(selectedProjection));
+>>>>>>> Stashed changes
     window.location.href = `/sale/${selectedProjection.hallId}?projectionId=${selectedProjection.id}`;
   };
 
@@ -76,17 +114,13 @@ useEffect(() => {
             <span>{movie.durationInMinutes} min</span>
             <span>{movie.releaseYear}</span>
           </div>
-
           <p className="movie-section-title">Synopsis</p>
           <p>{movie.description}</p>
-
           <p className="movie-section-title">Director</p>
           <p>{movie.director}</p>
-
           <p className="movie-section-title">Cast</p>
           <p>{movie.movieCast}</p>
-
-          {movie.currentlyShowing ? (
+          {movie.currentlyShowing && (
             <>
               <p className="movie-section-title">Screenings</p>
               <div className="screening-buttons">
@@ -94,10 +128,10 @@ useEffect(() => {
                 <button className={selectedDay === 'tomorrow' ? 'active' : ''} onClick={() => setSelectedDay('tomorrow')}>Tomorrow</button>
                 <button className={selectedDay === 'after' ? 'active' : ''} onClick={() => setSelectedDay('after')}>Day After</button>
               </div>
-
               <div className="time-buttons">
                 {projections.length > 0 ? (
                   projections.map((p) => (
+<<<<<<< Updated upstream
                   <button
                     key={p.id}
                     onClick={() => {
@@ -109,18 +143,25 @@ useEffect(() => {
                     {new Date(p.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ({formatType(p.projectionType)})
                   </button>
 
+=======
+                    <button
+                      key={p.id}
+                      onClick={() => setSelectedProjection(p)}
+                      className={selectedProjection?.id === p.id ? 'active' : ''}
+                    >
+                      {new Date(p.startTime).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })} ({formatType(p.projectionType)})
+                    </button>
+>>>>>>> Stashed changes
                   ))
                 ) : (
                   <p style={{ color: '#aaa' }}>No screenings available for selected day.</p>
                 )}
               </div>
             </>
-          ) : (
-            <p style={{ marginTop: '20px', fontStyle: 'italic', color: '#ccc' }}>
-              🎬 Coming Soon – This movie is not yet in theaters.
-            </p>
           )}
-
           <div className="action-buttons">
             <button onClick={() => setShowTrailer(!showTrailer)}>
               🎬 {showTrailer ? 'Hide Trailer' : 'Watch Trailer'}
@@ -129,7 +170,6 @@ useEffect(() => {
               <button onClick={handleBookTickets}>🎟️ Book Tickets</button>
             )}
           </div>
-
           {showTrailer && movie.trailerUrl && (
             <div style={{ marginTop: '30px' }}>
               <iframe
@@ -145,6 +185,58 @@ useEffect(() => {
             </div>
           )}
         </div>
+<<<<<<< Updated upstream
+=======
+        <div className="review-section">
+          <h2>📝 Reviews</h2>
+          {reviews.length === 0 ? (
+            <p>No reviews yet.</p>
+          ) : (
+            <ul className="review-list">
+              {reviews.map((r) => (
+                <li key={r.id} className="review-item">
+                  <p><strong>{r.userName}</strong> rated it {r.rating} ⭐</p>
+                  <p>{r.comment}</p>
+                  <p className="review-date">{new Date(r.createdAt).toLocaleDateString()}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className="add-review-form">
+            <h3>Add Your Review</h3>
+            {isLoggedIn ? (
+              <>
+                <textarea
+                  value={newReview.comment}
+                  onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                  placeholder="Write your comment here..."
+                  rows={4}
+                  className="review-textarea"
+                />
+                <div className="rating-dropdown">
+                  <label htmlFor="rating">Rating:</label>
+                  <select
+                    id="rating"
+                    value={newReview.rating}
+                    onChange={(e) => setNewReview({ ...newReview, rating: parseInt(e.target.value) })}
+                  >
+                    {[1, 2, 3, 4, 5].map((val) => (
+                      <option key={val} value={val}>{val} ⭐</option>
+                    ))}
+                  </select>
+                </div>
+                <button onClick={handleReviewSubmit} className="submit-btn" style={{ marginTop: '12px' }}>
+                  Submit Review
+                </button>
+              </>
+            ) : (
+              <p style={{ fontStyle: 'italic', color: '#888' }}>
+                You must be logged in to write a review.
+              </p>
+            )}
+          </div>
+        </div>
+>>>>>>> Stashed changes
       </div>
     </div>
   );

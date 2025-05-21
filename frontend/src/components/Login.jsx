@@ -1,8 +1,8 @@
-// Login.jsx
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import { AuthContext } from '../context/AuthContext';
+import api from '../axios';
 
 export default function Login() {
   const [user, setUser] = useState({ email: '', password: '' });
@@ -14,14 +14,16 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+<<<<<<< Updated upstream
+=======
+    setErrorMessage('');
+>>>>>>> Stashed changes
 
     try {
-      const response = await fetch('http://localhost:8089/api/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user),
-      });
+      const response = await api.post('/users/login', user);
+      const data = response.data;
 
+<<<<<<< Updated upstream
       if (!response.ok) {
         const text = await response.text();
         alert('Login failed: ' + text);
@@ -36,6 +38,23 @@ export default function Login() {
       navigate('/user');
     } catch (err) {
       alert('Error: Backend not running or wrong URL.');
+=======
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userId', data.userId);
+      login(data.token, data.role);
+
+      if (data.role === 'Admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/user');
+      }
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        setErrorMessage('Invalid username or password.');
+      } else {
+        setErrorMessage('Error: Backend not running or wrong URL.');
+      }
+>>>>>>> Stashed changes
       console.error(err);
     }
   };
@@ -72,9 +91,22 @@ export default function Login() {
             className="input-full"
             required
           />
+<<<<<<< Updated upstream
           <button type="submit" className="submit-btn">
             Sign in
           </button>
+=======
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          <button type="submit" className="submit-btn">Sign in</button>
+          <div className="register-redirect">
+            <p className="register-text">
+              Don't have an account?{' '}
+              <span className="register-link" onClick={() => navigate('/register')}>
+                Register here
+              </span>
+            </p>
+          </div>
+>>>>>>> Stashed changes
         </form>
       </div>
     </div>

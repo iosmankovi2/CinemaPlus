@@ -38,10 +38,20 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/users/login",
                                 "/api/users/register",
+<<<<<<< Updated upstream
                                 "/api/halls",
                                 "/api/seats/**",
                                 "/api/movies",
                                 "/api/tickets"
+=======
+                                "/api/halls/**",
+                                "/api/movies/**",
+                                "/api/projections/**",
+                                "/api/seats/**",
+                                "/api/tickets/**",
+                                "/api/reviews/**",
+                                "/api/payment/**"
+>>>>>>> Stashed changes
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

@@ -1,3 +1,4 @@
+
 .seat-grid-wrapper {
   position: relative;
   padding: 30px;
@@ -15,8 +16,16 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.6); /* tamni sloj */
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: -1;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 32px;
+  text-shadow: 1px 1px 3px black;
 }
 
 h3 {
@@ -66,6 +75,11 @@ h3 {
   font-size: 14px;
   font-weight: bold;
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+
+.seat:hover:not(.taken) {
+  transform: scale(1.1);
 }
 
 .seat.taken {
@@ -95,11 +109,13 @@ h3 {
   font-size: 16px;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  transition: background-color 0.3s ease;
 }
 
 .btn-reserve:hover {
   background-color: #e74c3c;
 }
+
 .ticket-preview {
   margin-top: 30px;
   background-color: rgba(255, 255, 255, 0.1);
@@ -107,10 +123,50 @@ h3 {
   padding: 20px;
   border: 1px dashed white;
   width: 320px;
-  margin: 30px auto;
+  margin-left: auto;
+  margin-right: auto;
   border-radius: 12px;
 }
 
-.ticket-preview .ticket p {
+.ticket-preview p {
   margin: 6px 0;
 }
+<<<<<<< Updated upstream
+=======
+
+.rental-period {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.rental-time-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.rental-time-input label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #fdfdfd;
+}
+
+.rental-time-input input[type="datetime-local"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #333;
+  width: auto;
+  max-width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rental-time-input input[type="datetime-local"]:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
+  outline: none;
+}
+>>>>>>> Stashed changes
