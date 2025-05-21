@@ -90,7 +90,11 @@ useEffect(() => {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // Redirekcija na izbor sjedišta
+=======
+    localStorage.setItem("selectedProjection", JSON.stringify(selectedProjection));
+>>>>>>> Stashed changes
 =======
     localStorage.setItem("selectedProjection", JSON.stringify(selectedProjection));
 >>>>>>> Stashed changes
@@ -186,7 +190,10 @@ useEffect(() => {
           )}
         </div>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
         <div className="review-section">
           <h2>📝 Reviews</h2>
           {reviews.length === 0 ? (
@@ -236,6 +243,9 @@ useEffect(() => {
             )}
           </div>
         </div>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       </div>
     </div>

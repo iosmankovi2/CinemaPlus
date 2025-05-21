@@ -15,6 +15,10 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+    setErrorMessage('');
+>>>>>>> Stashed changes
 =======
     setErrorMessage('');
 >>>>>>> Stashed changes
@@ -23,6 +27,7 @@ export default function Login() {
       const response = await api.post('/users/login', user);
       const data = response.data;
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
       if (!response.ok) {
         const text = await response.text();
@@ -41,6 +46,10 @@ export default function Login() {
 =======
       localStorage.setItem('token', data.token);
       localStorage.setItem('userId', data.userId);
+=======
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userId', data.userId);
+>>>>>>> Stashed changes
       login(data.token, data.role);
 
       if (data.role === 'Admin') {
@@ -54,6 +63,9 @@ export default function Login() {
       } else {
         setErrorMessage('Error: Backend not running or wrong URL.');
       }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       console.error(err);
     }
@@ -92,10 +104,13 @@ export default function Login() {
             required
           />
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           <button type="submit" className="submit-btn">
             Sign in
           </button>
 =======
+=======
+>>>>>>> Stashed changes
           {errorMessage && <p className="error-message">{errorMessage}</p>}
           <button type="submit" className="submit-btn">Sign in</button>
           <div className="register-redirect">
@@ -106,6 +121,9 @@ export default function Login() {
               </span>
             </p>
           </div>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         </form>
       </div>

@@ -17,11 +17,17 @@ const SeatGrid = ({ hallId }) => {
   const projectionId = new URLSearchParams(location.search).get('projectionId');
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   // Dohvati sjedišta za salu
   useEffect(() => {
     fetch(`http://localhost:8089/api/seats/hall/${hallId}`)
       .then(res => res.json())
       .then(data => Array.isArray(data) ? setSeats(data) : setSeats([]))
+=======
+  useEffect(() => {
+    api.get(`/seats/hall/${hallId}`)
+      .then(res => setSeats(Array.isArray(res.data) ? res.data : []))
+>>>>>>> Stashed changes
 =======
   useEffect(() => {
     api.get(`/seats/hall/${hallId}`)
@@ -39,6 +45,7 @@ const SeatGrid = ({ hallId }) => {
   // Rezervacija
   const handleReservation = async () => {
     const userId = localStorage.getItem('userId');
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
     if (!token || !userId || !projectionId) {
@@ -70,6 +77,8 @@ const SeatGrid = ({ hallId }) => {
         const updated = await fetch(`http://localhost:8089/api/seats/hall/${hallId}`).then(r => r.json());
         setSeats(updated);
 =======
+=======
+>>>>>>> Stashed changes
     if (!userId) {
       alert("You must be logged in to make a reservation.");
       return;
@@ -145,6 +154,9 @@ const SeatGrid = ({ hallId }) => {
           await api.post(`/tickets/email/${reservationId}?email=${email}`);
           alert("Ticket sent to your email.");
         }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       } else {
         alert("Your ticket will be available at the cinema.");
@@ -260,7 +272,11 @@ const SeatGrid = ({ hallId }) => {
           <p><strong>Time:</strong> {new Date(selectedProjection.startTime).toLocaleString()}</p>
           <p><strong>Seats:</strong> {seatLabels}</p>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           <p><strong>Total:</strong> {(selected.length * 12).toFixed(2)} BAM</p>
+=======
+          {isLoggedIn && <p><strong>Total:</strong> {(selected.length * 12).toFixed(2)} BAM</p>}
+>>>>>>> Stashed changes
 =======
           {isLoggedIn && <p><strong>Total:</strong> {(selected.length * 12).toFixed(2)} BAM</p>}
 >>>>>>> Stashed changes

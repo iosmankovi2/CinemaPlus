@@ -39,11 +39,14 @@ public class SecurityConfig {
                                 "/api/users/login",
                                 "/api/users/register",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                                 "/api/halls",
                                 "/api/seats/**",
                                 "/api/movies",
                                 "/api/tickets"
 =======
+=======
+>>>>>>> Stashed changes
                                 "/api/halls/**",
                                 "/api/movies/**",
                                 "/api/projections/**",
@@ -51,6 +54,9 @@ public class SecurityConfig {
                                 "/api/tickets/**",
                                 "/api/reviews/**",
                                 "/api/payment/**"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                         ).permitAll()
                         .anyRequest().authenticated()
