@@ -168,6 +168,7 @@
   background: linear-gradient(135deg, #ff5a5a, #ff8383);
   transform: translateY(-2px);
 }
+
 .review-section {
   margin-top: 40px;
   padding: 20px;
@@ -247,4 +248,10 @@
 .submit-btn:hover {
   transform: scale(1.04);
   box-shadow: 0 0 18px rgba(239, 68, 68, 0.8);
+}
+.time-buttons button.active {
+  background-color: #e50914;
+  color: white;
+  border: none;
+  font-weight: bold;
 }

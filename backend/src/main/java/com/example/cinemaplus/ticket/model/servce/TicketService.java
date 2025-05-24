@@ -4,6 +4,7 @@ import com.example.cinemaplus.projection.model.Projection;
 import com.example.cinemaplus.projection.repository.ProjectionRepository;
 import com.example.cinemaplus.seat.model.model.Seat;
 import com.example.cinemaplus.seat.model.repository.SeatRepository;
+import com.example.cinemaplus.ticket.model.TicketStatus;
 import com.example.cinemaplus.ticket.model.TicketType;
 import com.example.cinemaplus.ticket.model.dto.TicketDTO;
 import com.example.cinemaplus.ticket.model.dto.TicketRequestDTO;
@@ -11,6 +12,7 @@ import com.example.cinemaplus.ticket.model.model.Ticket;
 import com.example.cinemaplus.ticket.model.repository.TicketRepository;
 import com.example.cinemaplus.user.model.User;
 import com.example.cinemaplus.user.repository.UserRepository;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,12 @@ public class TicketService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TicketPdfService ticketPdfService;
+
+    @Autowired
+    private TicketEmailService ticketEmailService;
+
     public List<TicketDTO> getTicketsByUser(Long userId) {
         return ticketRepository.findByUserId(userId).stream().map(this::mapToDTO).toList();
     }
@@ -44,7 +52,7 @@ public class TicketService {
         dto.setHallName(ticket.getHallName());
         dto.setSeats(ticket.getSeats());
         dto.setPrice(ticket.getPrice().toString());
-        dto.setPurchasedAt(ticket.getPurchasedAt().toString());
+        dto.setPurchasedAt(ticket.getPurchaseDate().toString());
         return dto;
     }
 
@@ -66,7 +74,11 @@ public class TicketService {
         System.out.println("Generisanje PDF karte za: " + ticket.getId());
     }
 
-    public void createTickets(TicketRequestDTO request) {
+    public List<Ticket> getTicketsByReservationId(Long reservationId) {
+        return ticketRepository.findAllByReservationId(reservationId);
+    }
+
+    public Long createTickets(TicketRequestDTO request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -74,6 +86,8 @@ public class TicketService {
                 .orElseThrow(() -> new RuntimeException("Projection not found"));
 
         List<Seat> seats = seatRepository.findAllById(request.getSeatIds());
+
+        Long reservationId = System.currentTimeMillis();
 
         for (Seat seat : seats) {
             Ticket ticket = new Ticket();
@@ -83,9 +97,25 @@ public class TicketService {
             ticket.setType(TicketType.valueOf(request.getType()));
             ticket.setPrice(projection.getTicketPrice());
             ticket.setPurchaseDate(LocalDateTime.now());
+            ticket.setReservationId(reservationId);
+            ticket.setStatus(TicketStatus.valueOf("ACTIVE"));
+
+            seat.setTaken(true);
+            seatRepository.save(seat);
 
             ticketRepository.save(ticket);
-            handleTicketDelivery(ticket);
         }
+
+        if (TicketType.valueOf(request.getType()) == TicketType.EMAIL_TICKET) {
+            try {
+                List<Ticket> tickets = ticketRepository.findAllByReservationId(reservationId);
+                byte[] pdfData = ticketPdfService.generatePdfForTickets(tickets);
+                ticketEmailService.sendTicketEmail(user.getEmail(), pdfData);
+            } catch (MessagingException e) {
+                System.err.println("Slanje e-maila nije uspjelo: " + e.getMessage());
+            }
+        }
+
+        return reservationId;
     }
 }

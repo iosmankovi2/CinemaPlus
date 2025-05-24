@@ -48,6 +48,8 @@ public class Ticket {
 
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
+    @Column(name = "reservation_id")
+    private Long reservationId;
 
     // === VIRTUALNA POLJA (izračunata iz povezanih entiteta) ===
 

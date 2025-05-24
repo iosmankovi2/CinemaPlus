@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import './SeatGrid.css';
 import { useLocation } from 'react-router-dom';
+import './SeatGrid.css';
+import api from '../../axios';
 
 const SeatGrid = ({ hallId }) => {
   const location = useLocation();
@@ -18,6 +19,9 @@ const SeatGrid = ({ hallId }) => {
   const [rentalEnd, setRentalEnd] = useState('');
 
   const projectionId = new URLSearchParams(location.search).get('projectionId');
+  const isLoggedIn = !!localStorage.getItem('token');
+  const isHallRental = !projectionId;
+  const seatPrice = 12;
 
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem('token'));
@@ -37,7 +41,6 @@ const SeatGrid = ({ hallId }) => {
   };
 
   const handleReservation = async () => {
-    const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
 
     if (!token || !userId) {
@@ -94,7 +97,7 @@ const SeatGrid = ({ hallId }) => {
         alert("Error: " + text);
       }
     } catch (err) {
-      alert("Failed to fetch: " + err.message);
+      alert("Error: " + (err?.response?.data || err.message));
     }
   };
 
