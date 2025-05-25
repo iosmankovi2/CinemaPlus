@@ -1,5 +1,6 @@
 package com.example.cinemaplus.ticket.model.controller;
 
+import com.example.cinemaplus.ticket.model.dto.LatestTicketDTO;
 import com.example.cinemaplus.ticket.model.dto.TicketRequestDTO;
 import com.example.cinemaplus.ticket.model.dto.TicketDTO;
 import com.example.cinemaplus.ticket.model.model.Ticket;
@@ -100,6 +101,17 @@ public class TicketController {
     public ResponseEntity<List<TicketDTO>> getTicketsByUser(@PathVariable Long userId) {
         List<TicketDTO> tickets = ticketService.getTicketsByUser(userId);
         return ResponseEntity.ok(tickets);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<TicketDTO>> getAllTickets() {
+        List<TicketDTO> tickets = ticketService.getAllTickets();
+        return ResponseEntity.ok(tickets);
+    }
+
+    @GetMapping("/latest")
+    public List<LatestTicketDTO> getLatestTickets() {
+        return ticketService.findLatestTickets(4); // returns 4 latest
     }
 
     @GetMapping

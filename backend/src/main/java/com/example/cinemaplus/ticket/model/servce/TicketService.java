@@ -6,6 +6,7 @@ import com.example.cinemaplus.seat.model.model.Seat;
 import com.example.cinemaplus.seat.model.repository.SeatRepository;
 import com.example.cinemaplus.ticket.model.TicketStatus;
 import com.example.cinemaplus.ticket.model.TicketType;
+import com.example.cinemaplus.ticket.model.dto.LatestTicketDTO;
 import com.example.cinemaplus.ticket.model.dto.TicketDTO;
 import com.example.cinemaplus.ticket.model.dto.TicketRequestDTO;
 import com.example.cinemaplus.ticket.model.model.Ticket;
@@ -14,6 +15,9 @@ import com.example.cinemaplus.user.model.User;
 import com.example.cinemaplus.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -43,6 +47,24 @@ public class TicketService {
         return ticketRepository.findByUserId(userId).stream().map(this::mapToDTO).toList();
     }
 
+    public List<TicketDTO> getAllTickets() {
+        return ticketRepository.findAll().stream().map(this::mapToDTO).toList();
+
+    }
+    public List<LatestTicketDTO> findLatestTickets(int limit) {
+        Pageable pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "purchaseDate"));
+        List<Ticket> tickets = ticketRepository.findAll(pageable).getContent();
+        return tickets.stream().map(this::mapToLatestDTO).toList();
+    }
+
+    private LatestTicketDTO mapToLatestDTO(Ticket ticket) {
+        LatestTicketDTO dto = new LatestTicketDTO();
+        dto.setMovieTitle(ticket.getMovieTitle());
+        dto.setPrice(ticket.getPrice().toString());
+        dto.setUserName(ticket.getUser().getFirstName() + " " + ticket.getUser().getLastName());
+        return dto;
+    }
+
     private TicketDTO mapToDTO(Ticket ticket) {
         TicketDTO dto = new TicketDTO();
         dto.setId(ticket.getId());
@@ -53,6 +75,7 @@ public class TicketService {
         dto.setSeats(ticket.getSeats());
         dto.setPrice(ticket.getPrice().toString());
         dto.setPurchasedAt(ticket.getPurchaseDate().toString());
+        dto.setUserName(ticket.getUser().getFirstName() + " " + ticket.getUser().getLastName());
         return dto;
     }
 
