@@ -19,6 +19,7 @@ import AdminLayout from "./components/AdminLayout";
 import PaymentPage from './components/Payment/Payment';
 import Success from './components/Payment/Success'
 import Failed from './components/Payment/Failed'
+import TicketsPage from "./components/TicketsPage/TicketsPage";
 function App() {
   return (
     <Router>
@@ -47,6 +48,7 @@ function App() {
         <Route path="admin/screenings" element={<RoleRoute requiredRole="Admin" element={<ScreeningsPage />} />} />
         <Route path="admin/users" element={<RoleRoute requiredRole="Admin" element={<UserTable />} />} />
         <Route path="admin/movies" element={<RoleRoute requiredRole="Admin" element={<AdminMovieManagement />} />} />
+        <Route path="admin/bookings" element={<RoleRoute requiredRole="Admin" element={<TicketsPage />} />} />
       </Routes>
     </Router>
   );

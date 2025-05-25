@@ -42,7 +42,7 @@ public class SecurityConfig {
                                 "/api/halls",
                                 "/api/seats/**",
                                 "/api/movies/**",
-                                "/api/tickets",
+                                "/api/tickets/**",
                                 "/api/users/me",
                                 "/api/projections/**",
                                 "/api/users/*",

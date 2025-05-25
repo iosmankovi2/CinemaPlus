@@ -9,6 +9,8 @@ const AdminDashboard = () => {
     const [activeMovies, setActiveMovies] = useState(0);
     const [nowShowing, setNowShowing] = useState(0);
     const [upcoming, setUpcoming] = useState(0);
+    const [latestTickets, setLatestTickets] = useState([]);
+
 
     const {logout} = useContext(AuthContext);
     const navigate = useNavigate();
@@ -34,6 +36,11 @@ const AdminDashboard = () => {
             .then(res => res.json())
             .then(data => setActiveMovies(data))
             .catch(err => console.error("Failed to load active movies:", err));
+
+        fetch("/api/tickets/latest")
+            .then(res => res.json())
+            .then(data => setLatestTickets(data))
+            .catch(err => console.error("Failed to load latest tickets:", err));
     }, []);
     return (
         <AdminLayout>
@@ -67,10 +74,11 @@ const AdminDashboard = () => {
         <div className="recent-bookings">
             <h4>Recent Bookings</h4>
             <ul>
-                <li><strong>John Doe</strong> – Dune: Part Two <span>$24</span></li>
-                <li><strong>Jane Smith</strong> – The Batman <span>$36</span></li>
-                <li><strong>Robert Johnson</strong> – Oppenheimer <span>$12</span></li>
-                <li><strong>Emily Davis</strong> – Poor Things <span>$24</span></li>
+                {latestTickets.map((ticket, index) => (
+                    <li key={index}>
+                        <strong>{ticket.userName}</strong> – {ticket.movieTitle} <span>{ticket.price} KM</span>
+                    </li>
+                ))}
             </ul>
         </div>
     </div>

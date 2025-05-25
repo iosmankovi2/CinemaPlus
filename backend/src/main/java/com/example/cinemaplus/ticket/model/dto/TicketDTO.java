@@ -1,6 +1,8 @@
 package com.example.cinemaplus.ticket.model.dto;
 
 import com.example.cinemaplus.ticket.model.TicketType;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -13,6 +15,9 @@ public class TicketDTO {
     private List<String> seats;
     private String price;
     private String purchasedAt;
+    @Getter
+    @Setter
+    private String userName;
     private String status;
     private TicketType type;
 
