@@ -50,7 +50,8 @@ public class SecurityConfig {
                                 "/api/reservations/user/*",
                                 "/api/reviews/movie/**",
                                 "/api/halls/reserve",
-                                "/api/payment/**" 
+                                "/api/payment/**" ,
+                                "/api/ticket/user/**"
                                 ).permitAll()
                                  .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
                         .anyRequest().authenticated()
