@@ -96,6 +96,7 @@ public class TicketController {
     }
 
     @GetMapping("/user/{userId}")
+    @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", allowCredentials = "true")
     public ResponseEntity<List<TicketDTO>> getTicketsByUser(@PathVariable Long userId) {
         List<TicketDTO> tickets = ticketService.getTicketsByUser(userId);
         return ResponseEntity.ok(tickets);

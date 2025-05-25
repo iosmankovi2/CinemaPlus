@@ -36,17 +36,18 @@
 }
 
 .welcome-title {
-  font-size: 6rem; /* Povećaj font još više */
+  font-size: 6rem;
   font-weight: bold;
   text-transform: uppercase;
   margin-bottom: 1rem;
-  letter-spacing: 6px; /* Dodaj još veći razmak između slova */
-  background: linear-gradient(45deg, #ef4444, #f59e0b, #10b981); /* Gradijent boje */
-  -webkit-background-clip: text; /* Boja teksta izgradjena gradijentom */
-  color: transparent; /* Tekst postaje transparentan, boja dolazi iz pozadine */
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.8), 0 0 25px rgba(239, 68, 68, 0.6), 0 0 5px rgba(239, 68, 68, 0.6); /* Više slojeva sjenki za svetlosne efekte */
-  animation: fadeInUp 2s ease-out, glowEffect 1.5s infinite alternate; /* Animacija za ulazak i svetlosni efekat */
+  letter-spacing: 6px;
+  background: linear-gradient(45deg, #ff5e57, #ffd057, #00ffcc); 
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.4), 0 0 15px rgba(239, 68, 68, 0.5), 0 0 4px rgba(255, 255, 255, 0.3);
+  animation: fadeInUp 2s ease-out, glowEffect 2s infinite alternate;
 }
+
 
 /* Animacija za fade-in efekt */
 @keyframes fadeInUp {
@@ -54,7 +55,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
-  100% {
+  70% {
     opacity: 1;
     transform: translateY(0);
   }
@@ -63,15 +64,14 @@
 /* Animacija za svetlosni efekat */
 @keyframes glowEffect {
   0% {
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.8), 0 0 25px rgba(36, 2, 2, 0.6), 0 0 5px rgba(39, 5, 5, 0.6);
-  }
-  50% {
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), 0 0 25px rgb(47, 2, 2), 0 0 10px rgb(30, 3, 3);
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3), 0 0 12px rgba(239, 68, 68, 0.3), 0 0 4px rgba(255, 255, 255, 0.2);
   }
   100% {
-    text-shadow: 0 4px 8px rgba(54, 5, 5, 0.8), 0 0 25px rgba(32, 1, 1, 0.6), 0 0 5px rgba(27, 1, 1, 0.6);
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.5), 0 0 18px rgba(239, 68, 68, 0.5), 0 0 6px rgba(255, 255, 255, 0.3);
   }
 }
+
+
 
 
 .subtitle {
