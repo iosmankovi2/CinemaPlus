@@ -19,7 +19,7 @@ public class CustomUserDetails implements UserDetails {
     // Dodjeljuje rolu korisniku (npr. ROLE_USER ili ROLE_ADMIN)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name().toUpperCase()));
     }
 
     @Override

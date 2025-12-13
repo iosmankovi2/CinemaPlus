@@ -32,7 +32,7 @@ public class ReviewController {
     private UserRepository userRepository;
 
 
-        @PreAuthorize("hasRole('User') or hasRole('Admin')")
+        @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
         @PostMapping
         public ResponseEntity<?> addReview(
         @RequestBody Review review,

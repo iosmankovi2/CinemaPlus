@@ -10,12 +10,23 @@ export default function Register() {
     password: '',
     confirmPassword: '',
   });
-  const [modalVisible, setModalVisible] = useState(false); // State za vidljivost modala
-  const [modalMessage, setModalMessage] = useState(''); // State za poruku u modalu
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setUser(prev => ({ ...prev, [name]: value }));
+
+    if (name === 'password') {
+      if (value.length > 0 && value.length < 6) {
+        setPasswordError('Password must be at least 6 characters');
+      } else {
+        setPasswordError('');
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -25,6 +36,11 @@ export default function Register() {
       setModalMessage('Passwords do not match');
       setModalVisible(true);
       setTimeout(() => setModalVisible(false), 3000);
+      return;
+    }
+
+    if (user.password.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
       return;
     }
 
@@ -108,6 +124,7 @@ export default function Register() {
             className="input-full"
             required
           />
+          {passwordError && <p className="error-message">{passwordError}</p>}
           <input
             name="confirmPassword"
             type="password"
@@ -122,6 +139,7 @@ export default function Register() {
           </button>
         </form>
       </div>
+
       {modalVisible && (
         <div className="modal-overlay">
           <div className="modal">

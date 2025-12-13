@@ -12,6 +12,7 @@ const MovieDetails = () => {
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({ comment: '', rating: 5 });
   const isLoggedIn = !!localStorage.getItem('token');
+const [selectionWarning, setSelectionWarning] = useState('');
 
   useEffect(() => {
     fetch(`/api/movies/${id}`)
@@ -93,13 +94,16 @@ const MovieDetails = () => {
 
   const handleBookTickets = () => {
     if (!selectedProjection) {
-      alert("Please select a screening time first.");
-      return;
-    }
-    if (!selectedProjection.hallId) {
-      alert("Hall ID is missing for this projection.");
-      return;
-    }
+    setSelectionWarning("⚠️ Please select a screening time before booking.");
+    return;
+  }
+
+  setSelectionWarning(''); // Očisti poruku ako je sve u redu
+
+  if (!selectedProjection.hallId) {
+    setSelectionWarning("Hall ID is missing for this projection.");
+    return;
+  }
     window.location.href = `/sale/${selectedProjection.hallId}?projectionId=${selectedProjection.id}`;
   };
 
@@ -178,11 +182,16 @@ const MovieDetails = () => {
             <button onClick={() => setShowTrailer(!showTrailer)}>
               🎬 {showTrailer ? 'Hide Trailer' : 'Watch Trailer'}
             </button>
-            {movie.currentlyShowing && isLoggedIn && (
+            {movie.currentlyShowing && isLoggedIn &&(
               <button onClick={handleBookTickets}>🎟️ Book Tickets</button>
+              
             )}
+            
           </div>
-
+          {selectionWarning && (
+            <p style={{ marginTop: '10px', color: '#f87171' }}>
+             {selectionWarning}
+       </p>)}
           {showTrailer && movie.trailerUrl && (
             <div style={{ marginTop: '30px' }}>
               <iframe

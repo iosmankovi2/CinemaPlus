@@ -35,9 +35,18 @@ public class UserController {
     private UserService userService;
   
 
-    @GetMapping("/")
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
 public ResponseEntity<List<User>> getAllUsers() {
     return ResponseEntity.ok(userService.getAllUsers());
+}
+@GetMapping("/debug-auth")
+public Object debugAuth(org.springframework.security.core.Authentication auth) {
+    return java.util.Map.of(
+        "name", auth != null ? auth.getName() : null,
+        "authorities", auth != null ? auth.getAuthorities().toString() : null,
+        "principal", auth != null ? auth.getPrincipal().getClass().getName() : null
+    );
 }
 
 @GetMapping("/{id}")
@@ -91,10 +100,11 @@ public ResponseEntity<User> getUserById(@PathVariable Long id, @AuthenticationPr
 
 
 @GetMapping("/me")
-public ResponseEntity<User> getLoggedInUser() {
-    CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return ResponseEntity.ok(userDetails.getUser());
+@PreAuthorize("isAuthenticated()")
+public ResponseEntity<User> getLoggedInUser(@AuthenticationPrincipal CustomUserDetails principal) {
+    return ResponseEntity.ok(principal.getUser());
 }
+
 
 
 @PutMapping("/{id}")
@@ -133,7 +143,7 @@ public ResponseEntity<User> getLoggedInUser() {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
 @GetMapping("/admin/data")
 public ResponseEntity<String> adminData() {
     return ResponseEntity.ok("Samo ADMIN vidi ovo.");
@@ -148,7 +158,7 @@ public ResponseEntity<List<Reservation>> getUserReservations(@PathVariable Long 
 
     // Brisanje korisnika
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
@@ -164,7 +174,7 @@ public ResponseEntity<List<Reservation>> getUserReservations(@PathVariable Long 
     
     }
     @PutMapping("/admin/{id}")
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> adminUpdateUser(@PathVariable Long id,
                                          @Valid @RequestBody UpdateUserDTO updatedUserDTO,
                                          BindingResult bindingResult) {

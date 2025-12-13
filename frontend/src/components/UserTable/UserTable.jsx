@@ -5,9 +5,8 @@ import "./UserTable.css";
 import ConfirmDeleteModal from "../ConfirmDeleteModal/ConfirmDeleteModal";
 import EditUserModal from "../EditUserModal/EditUserModal";
 import AddUserModal from "../AddUserModal/AddUserModal";
-import { FaUserPlus} from "react-icons/fa";
+import { FaUserPlus } from "react-icons/fa";
 import AdminLayout from "../AdminLayout";
-
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
@@ -20,74 +19,90 @@ const UserTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch("/api/users/")
-      .then((res) => res.json())
+    const token = localStorage.getItem("token");
+
+    fetch("http://localhost:8089/api/users", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },      
+    })
+      .then(async (res) => {
+        console.log(res)
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(text || `Failed to fetch users (${res.status})`);
+        }
+        return res.json();
+      })
       .then((data) => {
-        console.log("API response:", data); 
+        console.log("API response:", data);
         setUsers(data);
       })
       .catch((err) => console.error("Error fetching users:", err));
   }, []);
-  
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
-      user.firstName.toLowerCase().includes(searchTerm) ||
-      user.email.toLowerCase().includes(searchTerm);
-  
+      (user.firstName || "").toLowerCase().includes((searchTerm || "").toLowerCase()) ||
+      (user.email || "").toLowerCase().includes((searchTerm || "").toLowerCase());
+
     const matchesRole = role === "" || user.role === role;
     const matchesStatus = status === "" || user.userStatus === status;
-  
+
     return matchesSearch && matchesRole && matchesStatus;
   });
-  
+
   const handleDelete = (id) => {
-    console.log(id)
-    setSelectedUser(users.find(u => u.id === id));
+    setSelectedUser(users.find((u) => u.id === id));
     setShowConfirmModal(true);
   };
+
   const handleEdit = (user) => {
-  setSelectedUser(user);
-  setShowEditModal(true);
-};
+    setSelectedUser(user);
+    setShowEditModal(true);
+  };
 
-const handleSaveEdit = (id, updatedData) => {
-  const token = localStorage.getItem("token"); 
+  const handleSaveEdit = (id, updatedData) => {
+    const token = localStorage.getItem("token");
 
-  fetch(`/api/users/admin/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`  
-    },
-    body: JSON.stringify(updatedData),
-  })
-    .then((res) => {
-      console.log(updatedData);
-      if (!res.ok) throw new Error("Update failed");
-      setUsers(users.map((u) => (u.id === id ? { ...u, ...updatedData } : u)));
-      setShowEditModal(false);
-      setSelectedUser(null);
+    fetch(`/api/users/admin/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updatedData),
     })
-    .catch((err) => {
-      console.error("Error updating user:", err);
-      alert("Failed to update user.");
-    });
-};
-
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(text || `Update failed (${res.status})`);
+        }
+        setUsers(users.map((u) => (u.id === id ? { ...u, ...updatedData } : u)));
+        setShowEditModal(false);
+        setSelectedUser(null);
+      })
+      .catch((err) => {
+        console.error("Error updating user:", err);
+        alert("Failed to update user.");
+      });
+  };
 
   const confirmDelete = (id) => {
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
+
     fetch(`/api/users/${id}`, {
       method: "DELETE",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`  
+        Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => {
-        console.log("API response:", res); 
-        if (!res.ok) throw new Error("Failed to delete user");
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(text || `Failed to delete user (${res.status})`);
+        }
         setUsers(users.filter((user) => user.id !== id));
         setShowConfirmModal(false);
         setSelectedUser(null);
@@ -97,20 +112,25 @@ const handleSaveEdit = (id, updatedData) => {
         alert("Error deleting user.");
       });
   };
+
   const handleAddUser = (newUserData) => {
+    // Ako želiš da samo ADMIN može dodavati user-e, prebaci ovo na admin endpoint i dodaj Bearer token.
     fetch("/api/users/register", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(newUserData)
+      body: JSON.stringify(newUserData),
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to add user");
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(text || `Failed to add user (${res.status})`);
+        }
         return res.text();
       })
       .then(() => {
-        setUsers([...users, { id: Date.now(), ...newUserData }]); // ili refetch
+        setUsers([...users, { id: Date.now(), ...newUserData }]); // ili uradi refetch
         setShowAddModal(false);
       })
       .catch((err) => {
@@ -118,64 +138,74 @@ const handleSaveEdit = (id, updatedData) => {
         alert("Error adding user.");
       });
   };
-  
-  
-  return (
-      <AdminLayout>
-    <div className="user-header-top">
-      <h2 className="user-page-title">User Management</h2>
-      <button className="add-user-btn" onClick={() => setShowAddModal(true)}>
-        <FaUserPlus style={{ marginRight: "6px" }} />
-        Add User
-      </button>
-  </div>
-    <div className="table-container">
-    <h3>List of Users</h3>
-    <p className="subtitle_user">Manage all registered users, roles and activity status</p>
-      <Filters setRole={setRole} setStatus={setStatus} setSearchTerm={setSearchTerm}/>
-      <table>
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Last Login</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredUsers.map((user) => (
-            <UserRow key={user.id} user={user} onDelete={handleDelete} onEdit={handleEdit}/>))}
-        </tbody>
-      </table>
-      <ConfirmDeleteModal
-  visible={showConfirmModal}
-  user={selectedUser}
-  onConfirm={confirmDelete}
-  onCancel={() => {
-    setShowConfirmModal(false);
-    setSelectedUser(null);
-  }}
-/>
-<EditUserModal
-  visible={showEditModal}
-  user={selectedUser}
-  onClose={() => {
-    setShowEditModal(false);
-    setSelectedUser(null);
-  }}
-  onSave={handleSaveEdit}
-/>
-<AddUserModal
-  visible={showAddModal}
-  onClose={() => setShowAddModal(false)}
-  onSave={handleAddUser}
-/>
-    </div>
-      </AdminLayout>
-  );
-  
-};
 
+  return (
+    <AdminLayout>
+      <div className="user-header-top">
+        <h2 className="user-page-title">User Management</h2>
+        <button className="add-user-btn" onClick={() => setShowAddModal(true)}>
+          <FaUserPlus style={{ marginRight: "6px" }} />
+          Add User
+        </button>
+      </div>
+
+      <div className="table-container">
+        <h3>List of Users</h3>
+        <p className="subtitle_user">Manage all registered users, roles and activity status</p>
+
+        <Filters setRole={setRole} setStatus={setStatus} setSearchTerm={setSearchTerm} />
+
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Last Login</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {filteredUsers.map((user) => (
+              <UserRow
+                key={user.id}
+                user={user}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+              />
+            ))}
+          </tbody>
+        </table>
+
+        <ConfirmDeleteModal
+          visible={showConfirmModal}
+          user={selectedUser}
+          onConfirm={confirmDelete}
+          onCancel={() => {
+            setShowConfirmModal(false);
+            setSelectedUser(null);
+          }}
+        />
+
+        <EditUserModal
+          visible={showEditModal}
+          user={selectedUser}
+          onClose={() => {
+            setShowEditModal(false);
+            setSelectedUser(null);
+          }}
+          onSave={handleSaveEdit}
+        />
+
+        <AddUserModal
+          visible={showAddModal}
+          onClose={() => setShowAddModal(false)}
+          onSave={handleAddUser}
+        />
+      </div>
+    </AdminLayout>
+  );
+};
 
 export default UserTable;

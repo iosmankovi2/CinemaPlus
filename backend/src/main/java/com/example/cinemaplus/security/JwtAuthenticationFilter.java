@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
 
 @Component
@@ -21,7 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.equals("/api/users/login") || path.equals("/api/users/register");
+        return path.startsWith("/api/users/login") || path.startsWith("/api/users/register");
     }
 
     @Override
@@ -32,20 +33,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
 
-            if (JwtTokenUtil.isValidToken(token)) {
+            // ne diraj ako je već autentifikovan
+            if (SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                String token = authHeader.substring(7);
+
+                if (!JwtTokenUtil.isValidToken(token)) {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                    return;
+                }
+
                 String email = JwtTokenUtil.getEmailFromToken(token);
+
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
 
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } else {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Invalid token");
-                return;
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
 

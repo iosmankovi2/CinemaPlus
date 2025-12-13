@@ -1,14 +1,14 @@
 package com.example.cinemaplus.config;
 
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import com.example.cinemaplus.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,31 +33,30 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/users/login",
-                                "/api/users/register",
-                                "/api/halls",
-                                "/api/seats/**",
-                                "/api/movies/**",
-                                "/api/tickets/**",
-                                "/api/users/me",
-                                "/api/projections/**",
-                                "/api/users/*",
-                                "/api/admin/*",
-                                "/api/reservations/user/*",
-                                "/api/reviews/movie/**",
-                                "/api/halls/reserve",
-                                "/api/payment/**" ,
-                                "/api/ticket/user/**"
-                                ).permitAll()
-                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .csrf(csrf -> csrf.disable())
+            .cors(Customizer.withDefaults())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                // Preflight
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // PUBLIC endpoints (GUEST)
+                .requestMatchers(
+                    "/api/users/login",
+                    "/api/users/register",
+                    "/api/movies/**",
+                    "/api/projections/**",
+                    "/api/reviews/movie/**",
+                    "/api/halls"
+                ).permitAll()
+
+                // ADMIN endpoints
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                // sve ostalo mora biti prijavljeno (USER ili ADMIN)
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -75,8 +74,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+
+        // lokalno + kasnije dodaš AWS domen (CloudFront/S3/EC2)
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
 
