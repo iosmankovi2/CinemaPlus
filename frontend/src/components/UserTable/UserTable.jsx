@@ -25,20 +25,16 @@ const UserTable = () => {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
-      },      
+      },
     })
       .then(async (res) => {
-        console.log(res)
         if (!res.ok) {
           const text = await res.text().catch(() => "");
           throw new Error(text || `Failed to fetch users (${res.status})`);
         }
         return res.json();
       })
-      .then((data) => {
-        console.log("API response:", data);
-        setUsers(data);
-      })
+      .then((data) => setUsers(Array.isArray(data) ? data : []))
       .catch((err) => console.error("Error fetching users:", err));
   }, []);
 
@@ -66,7 +62,7 @@ const UserTable = () => {
   const handleSaveEdit = (id, updatedData) => {
     const token = localStorage.getItem("token");
 
-    fetch(`/api/users/admin/${id}`, {
+    fetch(`http://localhost:8089/api/users/admin/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -79,7 +75,7 @@ const UserTable = () => {
           const text = await res.text().catch(() => "");
           throw new Error(text || `Update failed (${res.status})`);
         }
-        setUsers(users.map((u) => (u.id === id ? { ...u, ...updatedData } : u)));
+        setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, ...updatedData } : u)));
         setShowEditModal(false);
         setSelectedUser(null);
       })
@@ -92,7 +88,7 @@ const UserTable = () => {
   const confirmDelete = (id) => {
     const token = localStorage.getItem("token");
 
-    fetch(`/api/users/${id}`, {
+    fetch(`http://localhost:8089/api/users/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -103,7 +99,7 @@ const UserTable = () => {
           const text = await res.text().catch(() => "");
           throw new Error(text || `Failed to delete user (${res.status})`);
         }
-        setUsers(users.filter((user) => user.id !== id));
+        setUsers((prev) => prev.filter((user) => user.id !== id));
         setShowConfirmModal(false);
         setSelectedUser(null);
       })
@@ -113,30 +109,42 @@ const UserTable = () => {
       });
   };
 
-  const handleAddUser = (newUserData) => {
-    // Ako želiš da samo ADMIN može dodavati user-e, prebaci ovo na admin endpoint i dodaj Bearer token.
-    fetch("/api/users/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newUserData),
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          const text = await res.text().catch(() => "");
-          throw new Error(text || `Failed to add user (${res.status})`);
-        }
-        return res.text();
-      })
-      .then(() => {
-        setUsers([...users, { id: Date.now(), ...newUserData }]); // ili uradi refetch
-        setShowAddModal(false);
-      })
-      .catch((err) => {
-        console.error("Add user failed:", err);
-        alert("Error adding user.");
+  // ✅ ADMIN ADD USER (returns {ok, message} for modal)
+  const handleAddUser = async (newUserData) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const res = await fetch("http://localhost:8089/api/users/admin/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newUserData),
       });
+
+      const text = await res.text().catch(() => "");
+
+      if (!res.ok) {
+        return { ok: false, message: text || `Failed to add user (${res.status})` };
+      }
+
+      // backend vraća string (User created successfully.) ali ostavljamo fallback
+      let createdUser = null;
+      try {
+        createdUser = text ? JSON.parse(text) : null;
+      } catch (_) {
+        createdUser = null;
+      }
+
+      const uiUser = createdUser || { id: Date.now(), ...newUserData };
+      setUsers((prev) => [...prev, uiUser]);
+
+      setShowAddModal(false);
+      return { ok: true, user: uiUser };
+    } catch (err) {
+      return { ok: false, message: err?.message || "Error adding user." };
+    }
   };
 
   return (
@@ -168,12 +176,7 @@ const UserTable = () => {
 
           <tbody>
             {filteredUsers.map((user) => (
-              <UserRow
-                key={user.id}
-                user={user}
-                onDelete={handleDelete}
-                onEdit={handleEdit}
-              />
+              <UserRow key={user.id} user={user} onDelete={handleDelete} onEdit={handleEdit} />
             ))}
           </tbody>
         </table>

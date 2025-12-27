@@ -52,6 +52,7 @@ public class SecurityConfig {
 
                 // ADMIN endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
 
                 // sve ostalo mora biti prijavljeno (USER ili ADMIN)
                 .anyRequest().authenticated()

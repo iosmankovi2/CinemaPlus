@@ -188,5 +188,26 @@ public ResponseEntity<List<Reservation>> getUserReservations(@PathVariable Long 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user: " + e.getMessage());
     }
 }
+@PostMapping("/admin/register")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<String> adminRegisterUser(
+        @Valid @RequestBody UserDTO userDTO,
+        BindingResult bindingResult) {
+
+    if (bindingResult.hasErrors()) {
+        return ResponseEntity.badRequest()
+                .body("Validation failed: " + bindingResult.getAllErrors());
+    }
+
+    try {
+        userService.registerUser(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("User created successfully.");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error creating user: " + e.getMessage());
+    }
+}
+
 
 }

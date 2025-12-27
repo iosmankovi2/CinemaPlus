@@ -1,13 +1,12 @@
 package com.example.cinemaplus.ticket.model.dto;
 
 import com.example.cinemaplus.ticket.model.TicketType;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
 public class TicketDTO {
     private Long id;
+    private Long reservationId;   // ✅ NEW
     private String movieTitle;
     private String date;
     private String time;
@@ -15,16 +14,15 @@ public class TicketDTO {
     private List<String> seats;
     private String price;
     private String purchasedAt;
-    @Getter
-    @Setter
     private String userName;
-    private String status;
-    private TicketType type;
+    private String status;        // ✅ NEW
+    private TicketType type;      // ✅ NEW (optional)
 
-
-    // --- Getters & Setters ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public Long getReservationId() { return reservationId; }
+    public void setReservationId(Long reservationId) { this.reservationId = reservationId; }
 
     public String getMovieTitle() { return movieTitle; }
     public void setMovieTitle(String movieTitle) { this.movieTitle = movieTitle; }
@@ -46,4 +44,13 @@ public class TicketDTO {
 
     public String getPurchasedAt() { return purchasedAt; }
     public void setPurchasedAt(String purchasedAt) { this.purchasedAt = purchasedAt; }
+
+    public String getUserName() { return userName; }
+    public void setUserName(String userName) { this.userName = userName; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public TicketType getType() { return type; }
+    public void setType(TicketType type) { this.type = type; }
 }

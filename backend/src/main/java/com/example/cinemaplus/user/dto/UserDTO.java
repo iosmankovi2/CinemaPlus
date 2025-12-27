@@ -3,6 +3,7 @@ package com.example.cinemaplus.user.dto;
 import com.example.cinemaplus.user.model.Role;
 import com.example.cinemaplus.user.model.UserStatus;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.Valid;
@@ -16,7 +17,11 @@ public class UserDTO {
     @NotBlank(message = "Last name is mandatory")
     private String lastName;
 
-    @Email(message = "Email should be valid")
+    @NotBlank(message = "Email is mandatory")
+    @Pattern(
+        regexp = "^(?!.*\\s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+        message = "Email should be valid (e.g. name@domain.com)"
+    )
     @NotBlank(message = "Email is mandatory")
     private String email;
 

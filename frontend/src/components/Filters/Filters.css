@@ -12,11 +12,13 @@
   background-color: #1f1f1f;
   color: #f1f1f1;
   border: 1px solid #333;
-  padding: 10px 12px;
   border-radius: 8px;
   font-size: 14px;
   outline: none;
   transition: border 0.2s ease, background 0.2s ease;
+  height: 44px;               /* bitno */
+  padding: 0 12px;     /* bitno: prostora za ikonu */
+  line-height: 44px; 
 }
 
 .filter-input:focus,

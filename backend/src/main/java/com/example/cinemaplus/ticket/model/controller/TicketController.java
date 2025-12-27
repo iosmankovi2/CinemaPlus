@@ -1,5 +1,6 @@
 package com.example.cinemaplus.ticket.model.controller;
 
+import com.example.cinemaplus.security.CustomUserDetails;
 import com.example.cinemaplus.ticket.model.dto.LatestTicketDTO;
 import com.example.cinemaplus.ticket.model.dto.TicketRequestDTO;
 import com.example.cinemaplus.ticket.model.dto.TicketDTO;
@@ -7,12 +8,17 @@ import com.example.cinemaplus.ticket.model.model.Ticket;
 import com.example.cinemaplus.ticket.model.servce.TicketEmailService;
 import com.example.cinemaplus.ticket.model.servce.TicketPdfService;
 import com.example.cinemaplus.ticket.model.servce.TicketService;
+
 import jakarta.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @RestController
 @RequestMapping("/api/tickets")
@@ -118,4 +124,22 @@ public class TicketController {
     public String test() {
         return "Tickets endpoint is working.";
     }
+
+    @PutMapping("/reservation/{reservationId}/cancel")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+
+    public ResponseEntity<String> cancelReservation(@PathVariable Long reservationId,
+                                                @RequestParam(required = false) Long userId, 
+                                                @AuthenticationPrincipal CustomUserDetails principal) {
+    try {
+        ticketService.cancelReservation(reservationId, userId, principal);
+        return ResponseEntity.ok("Reservation cancelled successfully.");
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error cancelling reservation: " + e.getMessage());
+    }
+}
+
 }

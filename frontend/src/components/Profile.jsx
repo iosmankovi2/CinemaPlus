@@ -9,6 +9,7 @@ const Profile = () => {
   const [tickets, setTickets] = useState([]);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
+  // Password change form state
   const [passwordData, setPasswordData] = useState({
     oldPassword: '',
     newPassword: '',
@@ -16,8 +17,15 @@ const Profile = () => {
   });
   const [passwordError, setPasswordError] = useState('');
 
-  // ✅ NEW: email validation state
+  // Email validation state (edit profile)
   const [emailError, setEmailError] = useState('');
+
+  // Cancel reservation modal state
+  const [showCancelPopup, setShowCancelPopup] = useState(false);
+  const [ticketToCancel, setTicketToCancel] = useState(null);
+  const [cancelError, setCancelError] = useState('');
+  const [cancelSuccess, setCancelSuccess] = useState(''); // ✅ NEW
+  const [isCancelling, setIsCancelling] = useState(false);
 
   const userId = localStorage.getItem('userId');
   const token = localStorage.getItem('token');
@@ -41,7 +49,7 @@ const Profile = () => {
   };
 
   // ---------------------------
-  // ✅ Email validation (frontend)
+  // Email validation (frontend)
   // - no spaces
   // - must look like name@domain.com
   // ---------------------------
@@ -66,7 +74,7 @@ const Profile = () => {
         setUser(data);
         setEditedUser(data);
 
-        // initialize email validation state (optional)
+        // init email validation
         setEmailError(validateEmail(data?.email || ''));
       } catch (err) {
         console.error('Profile fetch error:', err.message);
@@ -80,7 +88,7 @@ const Profile = () => {
         });
         if (!res.ok) throw new Error(await res.text());
         const data = await res.json();
-        setTickets(data);
+        setTickets(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Tickets fetch error:', err.message);
       }
@@ -90,7 +98,7 @@ const Profile = () => {
     fetchTickets();
   }, [userId, token, navigate]);
 
-  // ✅ updated to validate email while typing
+  // Edit profile inputs
   const handleUserChange = (e) => {
     const { name, value } = e.target;
     const next = { ...editedUser, [name]: value };
@@ -101,15 +109,14 @@ const Profile = () => {
     }
   };
 
+  // Change password inputs
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     const next = { ...passwordData, [name]: value };
     setPasswordData(next);
 
-    // live validation UX
     if (name === 'newPassword') {
-      const strengthMsg = validatePasswordStrength(value);
-      setPasswordError(strengthMsg);
+      setPasswordError(validatePasswordStrength(value));
     }
 
     if (name === 'confirmNewPassword') {
@@ -129,10 +136,10 @@ const Profile = () => {
     }
   };
 
+  // Save profile changes
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ block submit if email invalid
     const emailMsg = validateEmail(editedUser.email || '');
     if (emailMsg) {
       setEmailError(emailMsg);
@@ -154,21 +161,26 @@ const Profile = () => {
       setEditedUser(updated);
       setIsEditing(false);
 
-      // keep validation state in sync
       setEmailError(validateEmail(updated?.email || ''));
     } catch (err) {
       alert('Update failed: ' + err.message);
     }
   };
 
+  // Submit password change
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
 
     const strengthMsg = validatePasswordStrength(passwordData.newPassword);
-    if (strengthMsg) return alert(strengthMsg);
+    if (strengthMsg) {
+      setPasswordError(strengthMsg);
+      return;
+    }
 
-    if (passwordData.newPassword !== passwordData.confirmNewPassword)
-      return alert('Passwords do not match!');
+    if (passwordData.newPassword !== passwordData.confirmNewPassword) {
+      setPasswordError('Passwords do not match.');
+      return;
+    }
 
     try {
       const res = await fetch(`http://localhost:8089/api/users/${userId}/password`, {
@@ -191,6 +203,73 @@ const Profile = () => {
       alert('Password updated successfully!');
     } catch (err) {
       alert('Password change failed: ' + err.message);
+    }
+  };
+
+  // ---------------------------
+  // Cancel reservation popup + backend call
+  // ---------------------------
+  const openCancelPopup = (ticket) => {
+    setCancelError('');
+    setCancelSuccess('');
+
+    // safety: requires reservationId from backend
+    if (!ticket?.reservationId) {
+      setCancelError('Reservation id is missing. Please refresh and try again.');
+      return;
+    }
+
+    setTicketToCancel(ticket);
+    setShowCancelPopup(true);
+  };
+
+  const closeCancelPopup = () => {
+    if (isCancelling) return; // avoid closing mid-request
+    setShowCancelPopup(false);
+    setTicketToCancel(null);
+    setCancelError('');
+  };
+
+  const confirmCancelReservation = async () => {
+    if (!ticketToCancel?.reservationId) {
+      setCancelError('Reservation id is missing.');
+      return;
+    }
+
+    setIsCancelling(true);
+    setCancelError('');
+    setCancelSuccess('');
+
+    try {
+      const res = await fetch(
+        `http://localhost:8089/api/tickets/reservation/${ticketToCancel.reservationId}/cancel`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(await res.text());
+      }
+
+      setTickets((prev) =>
+        prev.map((t) =>
+          t.reservationId === ticketToCancel.reservationId
+            ? { ...t, status: 'CANCELLED' }
+            : t
+        )
+      );
+
+      setCancelSuccess('Reservation cancelled successfully.');
+      setShowCancelPopup(false);
+      setTicketToCancel(null);
+    } catch (err) {
+      setCancelError(err.message || 'Cancel failed.');
+    } finally {
+      setIsCancelling(false);
     }
   };
 
@@ -224,7 +303,6 @@ const Profile = () => {
                     : {})}
                 />
 
-                {/* ✅ Show email validation message under email field */}
                 {field === 'email' && emailError && (
                   <p className="error-text" style={{ marginTop: 6 }}>
                     {emailError}
@@ -234,7 +312,6 @@ const Profile = () => {
             ))}
 
             <div className="form-actions">
-              {/* ✅ disable save when email invalid */}
               <button type="submit" className="save-btn" disabled={!!emailError}>
                 Save Changes
               </button>
@@ -263,6 +340,7 @@ const Profile = () => {
             <p>
               <strong>Email:</strong> {user.email}
             </p>
+
             <button
               onClick={() => {
                 setIsEditing(true);
@@ -342,38 +420,105 @@ const Profile = () => {
 
       <div className="reservations-section">
         <h2>Your Tickets</h2>
+
+        {/* ✅ Success message after cancellation */}
+        {cancelSuccess && (
+          <p className="success-text" style={{ marginBottom: 10 }}>
+            {cancelSuccess}
+          </p>
+        )}
+
         {tickets.length > 0 ? (
           <ul className="reservations-list">
-            {tickets.map((ticket) => (
-              <li key={ticket.id} className="reservation-item">
-                <p>
-                  <strong>Ticket ID:</strong> {ticket.id}
-                </p>
-                <p>
-                  <strong>Movie:</strong> {ticket.movieTitle || 'N/A'}
-                </p>
-                <p>
-                  <strong>Hall:</strong> {ticket.hallName || 'N/A'}
-                </p>
-                <p>
-                  <strong>Date:</strong> {ticket.date || 'N/A'}
-                </p>
-                <p>
-                  <strong>Showtime:</strong> {ticket.time}
-                </p>
-                <p>
-                  <strong>Seat:</strong> {ticket.seats}
-                </p>
-                <p>
-                  <strong>Price:</strong> {ticket.price + ' BAM' || 'N/A'}
-                </p>
-              </li>
-            ))}
+            {tickets.map((ticket) => {
+              const isCancelled = (ticket.status || '').toUpperCase() === 'CANCELLED';
+
+              return (
+                <li key={ticket.id} className="reservation-item">
+                  <p>
+                    <strong>Ticket ID:</strong> {ticket.id}
+                  </p>
+
+                  <p>
+                    <strong>Reservation ID:</strong> {ticket.reservationId || 'N/A'}
+                  </p>
+
+                  <p>
+                    <strong>Movie:</strong> {ticket.movieTitle || 'N/A'}
+                  </p>
+                  <p>
+                    <strong>Hall:</strong> {ticket.hallName || 'N/A'}
+                  </p>
+                  <p>
+                    <strong>Date:</strong> {ticket.date || 'N/A'}
+                  </p>
+                  <p>
+                    <strong>Showtime:</strong> {ticket.time}
+                  </p>
+                  <p>
+                    <strong>Seat:</strong> {Array.isArray(ticket.seats) ? ticket.seats.join(', ') : String(ticket.seats)}
+                  </p>
+                  <p>
+                    <strong>Price:</strong> {ticket.price ? `${ticket.price} BAM` : 'N/A'}
+                  </p>
+
+                  <p>
+                    <strong>Status:</strong> {ticket.status || 'N/A'}
+                  </p>
+
+                  {!isCancelled ? (
+                    <button
+                      className="cancel-reservation-btn"
+                      onClick={() => openCancelPopup(ticket)}
+                      disabled={!ticket.reservationId}
+                      title={!ticket.reservationId ? 'Reservation ID missing' : 'Cancel reservation'}
+                    >
+                      Cancel reservation
+                    </button>
+                  ) : (
+                    <button className="cancel-reservation-btn" disabled title="Already cancelled">
+                      Cancelled
+                    </button>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         ) : (
           <p>No reservations found.</p>
         )}
       </div>
+
+      {showCancelPopup && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Cancel reservation</h3>
+
+            <p>
+              Are you sure you want to cancel this reservation?
+              <br />
+              <strong>Reservation ID:</strong> {ticketToCancel?.reservationId}
+              <br />
+              <strong>Ticket ID:</strong> {ticketToCancel?.id}
+            </p>
+
+            {cancelError && (
+              <p className="error-text" style={{ marginTop: 8 }}>
+                {cancelError}
+              </p>
+            )}
+
+            <div className="modal-actions">
+              <button className="save-btn" onClick={confirmCancelReservation} disabled={isCancelling}>
+                {isCancelling ? 'Cancelling...' : 'Yes, cancel'}
+              </button>
+              <button className="cancel-btn" onClick={closeCancelPopup} disabled={isCancelling}>
+                No, keep it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

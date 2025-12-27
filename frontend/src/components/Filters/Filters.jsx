@@ -6,7 +6,6 @@ const Filters = ({ setRole, setStatus, setSearchTerm }) => {
   return (
     <div className="filters-container">
     <div className="search-wrapper">
-  <FaSearch className="search-icon" />
   <input
     type="text"
     placeholder="Search users..."

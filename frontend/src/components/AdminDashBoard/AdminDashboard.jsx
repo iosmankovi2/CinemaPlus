@@ -45,18 +45,6 @@ const AdminDashboard = () => {
   useEffect(() => {
     (async () => {
       try {
-        const data = await authFetchJson("/api/movies/count-by-status");
-        if (data) {
-          setNowShowing(data.showing ?? 0);
-          setUpcoming(data.upcoming ?? 0);
-        }
-      } catch (err) {
-        console.error("Failed to load movie counts:", err.message);
-      }
-    })();
-
-    (async () => {
-      try {
         const data = await authFetchJson("/api/users/active-count");
         setActiveUsers(typeof data === "number" ? data : 0);
       } catch (err) {
@@ -110,14 +98,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="bottom-section">
-          <div className="revenue-overview">
-            <h4>Revenue Overview</h4>
-            <div className="chart-placeholder">
-              Now Showing: {nowShowing} | Upcoming: {upcoming}
-            </div>
-          </div>
-
           <div className="recent-bookings">
             <h4>Recent Bookings</h4>
             <ul>
@@ -130,7 +110,6 @@ const AdminDashboard = () => {
             </ul>
           </div>
         </div>
-      </div>
     </AdminLayout>
   );
 };
